@@ -1,0 +1,30 @@
+{
+    "schemaVersion": 1,
+    "id": "constellation_prize",
+    "version": "${version}",
+    "name": "Constellation Prize",
+    "description": "? ? ?",
+    "authors": [
+        "LilyflowerFDL / SpectreiCyanogen"
+    ],
+    "license": "GPLv3",
+    "icon": "assets/constellation-prize/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "xyz.lilyflower.conpri.ConstellationPrize"
+        ],
+        "fabric-datagen": [
+            "xyz.lilyflower.conpri.ConstellationPrizeDataGenerator"
+        ]
+    },
+    "mixins": [
+        "constellation_prize.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.16.9",
+        "minecraft": "~1.21.1",
+        "java": ">=21",
+        "fabric-api": "*"
+    }
+}
