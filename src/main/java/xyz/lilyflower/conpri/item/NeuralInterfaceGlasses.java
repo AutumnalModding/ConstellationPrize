@@ -5,7 +5,7 @@ import dev.emi.trinkets.api.TrinketItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import xyz.lilyflower.conpri.client.renderer.neural.Display;
+import xyz.lilyflower.conpri.client.renderer.Display;
 
 public class NeuralInterfaceGlasses extends TrinketItem {
     public NeuralInterfaceGlasses() {

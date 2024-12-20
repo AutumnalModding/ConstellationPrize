@@ -5,7 +5,7 @@
     "mixins": [
     ],
     "client": [
-        "client.RendererRecomputer"
+      "client.RendererInitializer"
     ],
     "injectors": {
         "defaultRequire": 1
