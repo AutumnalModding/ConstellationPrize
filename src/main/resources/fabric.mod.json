@@ -1,6 +1,6 @@
 {
     "schemaVersion": 1,
-    "id": "constellation_prize",
+    "id": "conpri",
     "version": "${version}",
     "name": "Constellation Prize",
     "description": "? ? ?",
@@ -12,14 +12,19 @@
     "environment": "*",
     "entrypoints": {
         "main": [
-            "xyz.lilyflower.conpri.ConstellationPrize"
+            "xyz.lilyflower.conpri.init.ConstellationPrize"
         ],
+
+        "client": [
+            "xyz.lilyflower.conpri.init.ConstellationPrizeClient"
+        ],
+
         "fabric-datagen": [
-            "xyz.lilyflower.conpri.ConstellationPrizeDataGenerator"
+            "xyz.lilyflower.conpri.init.ConstellationPrizeDataGenerator"
         ]
     },
     "mixins": [
-        "constellation_prize.mixins.json"
+        "conpri.mixins.json"
     ],
     "depends": {
         "fabricloader": ">=0.16.9",

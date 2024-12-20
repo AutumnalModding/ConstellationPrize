@@ -36,6 +36,9 @@ dependencies {
 
     modImplementation "dev.emi:trinkets:${project.trinkets_version}"
     include "dev.emi:trinkets:${project.trinkets_version}"
+
+    modImplementation 'org.reflections:reflections:0.10.2'
+    include 'org.reflections:reflections:0.10.2'
 }
 
 processResources {
