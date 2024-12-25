@@ -165,7 +165,6 @@ public class DialogueTextRenderer {
             
             int colour = red << 16 | green << 8 | blue;
 
-            System.out.println("Added ImmutablePair " + index + ", " + line);
             CHARACTER_COLOURS.put(new ImmutablePair<>(index, line), colour);
         }),
 

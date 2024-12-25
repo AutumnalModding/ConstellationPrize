@@ -2,7 +2,6 @@ package xyz.lilyflower.conpri.feature.dialogue;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 import xyz.lilyflower.conpri.client.renderer.module.RendererModule;
@@ -30,11 +29,15 @@ public class DialogueBoxRenderer implements RendererModule {
             DialogueTextRenderer.init(new DialogueTextRenderer.Message(
                     "textures/gui/portrait/pancakes.png",
                     null,
-                    SoundEvents.UI_BUTTON_CLICK.value(),
-                    "\000\002\000\377\000\377\000\001 \000\002\000\377\000\377\001\001 \000\002\000\377\000\377\002\001 This is some text. It's fourty characters!",
-                    "And you can have up to six lines, too!",
-                    "You can even\000\001\001\070 pause text while parsing!",
-                    "Or change the\000\001\002\012 line speed \000\001\002\002mid-line!\000\001\001\062 "
+                    null,
+                    ControlCodes.COLOUR_AT_INDEX + ControlCodes.colour(32, 1, 0xFF, 0xAA, 0x00) +
+                    ControlCodes.COLOUR_AT_INDEX + ControlCodes.colour(33, 1, 0xFF, 0xAA, 0x00) +
+                    ControlCodes.COLOUR_AT_INDEX + ControlCodes.colour(34, 1, 0xFF, 0xAA, 0x00) +
+
+                    "This is some text.. and it's now fifty characters!",
+                    "And you can have up to a max of six lines, too...",
+                    "...plus, you can even " + ControlCodes.PAUSE_FOR_FRAMES + (char) 0x32 + "pause text while parsing it!",
+                    "Or change the " + ControlCodes.CHANGE_LINE_SPEED + (char) 12 + "line speed " + ControlCodes.CHANGE_LINE_SPEED + (char) 2 + "mid-line! Also, colours." + ControlCodes.PAUSE_FOR_FRAMES + (char) 50 + " "
             ));
         }
 
