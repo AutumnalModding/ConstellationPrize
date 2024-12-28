@@ -4,7 +4,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 
-public interface RendererModule {
+public interface NeuralDisplayModule {
     boolean DEBUG_MODE = FabricLoader.getInstance().isDevelopmentEnvironment();
 
     boolean shouldRender();

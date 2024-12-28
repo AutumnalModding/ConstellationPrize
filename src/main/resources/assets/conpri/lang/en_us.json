@@ -1,5 +1,7 @@
 {
   "trinkets.slot.conpri.niglasses": "Neural Interface Glasses",
 
-  "item.conpri.neural_interface": "Neural Interface Glasses"
+  "item.conpri.neural_interface": "Neural Interface Glasses",
+
+  "stat.conpri.stars_exploded": "Stars Blown Up for Profit"
 }

@@ -4,10 +4,10 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
-import xyz.lilyflower.conpri.client.renderer.module.RendererModule;
+import xyz.lilyflower.conpri.client.renderer.module.NeuralDisplayModule;
 
 @SuppressWarnings("unused")
-public class DialogueBoxRenderer implements RendererModule {
+public class DialogueBoxRenderer implements NeuralDisplayModule {
     public static String CURRENT_PORTRAIT = "";
 
     @Override

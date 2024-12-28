@@ -19,6 +19,17 @@ repositories {
         name = "Ladysnake Libs"
         url = 'https://maven.ladysnake.org/releases'
     }
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                url "https://cursemaven.com"
+            }
+        }
+        filter {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 fabricApi {
@@ -39,6 +50,9 @@ dependencies {
 
     modImplementation 'org.reflections:reflections:0.10.2'
     include 'org.reflections:reflections:0.10.2'
+
+    modRuntimeOnly "curse.maven:ears-412013:5433820" // I want my skin support damnit
+
 }
 
 processResources {

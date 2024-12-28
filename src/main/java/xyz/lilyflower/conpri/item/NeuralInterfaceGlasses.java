@@ -5,7 +5,7 @@ import dev.emi.trinkets.api.TrinketItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import xyz.lilyflower.conpri.client.renderer.Display;
+import xyz.lilyflower.conpri.client.renderer.NDMM;
 
 public class NeuralInterfaceGlasses extends TrinketItem {
     public NeuralInterfaceGlasses() {
@@ -21,12 +21,12 @@ public class NeuralInterfaceGlasses extends TrinketItem {
     @Override
     public void onEquip(ItemStack stack, SlotReference slot, LivingEntity entity) {
         super.onEquip(stack, slot, entity);
-        Display.GLASSES_EQUIPPED = true;
+        NDMM.GLASSES_EQUIPPED = true;
     }
 
     @Override
     public void onUnequip(ItemStack stack, SlotReference slot, LivingEntity entity) {
         super.onUnequip(stack, slot, entity);
-        Display.GLASSES_EQUIPPED = false;
+        NDMM.GLASSES_EQUIPPED = false;
     }
 }
