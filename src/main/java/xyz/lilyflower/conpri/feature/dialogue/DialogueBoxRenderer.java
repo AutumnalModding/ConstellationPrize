@@ -5,6 +5,7 @@ import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 import xyz.lilyflower.conpri.client.renderer.module.NeuralDisplayModule;
+import xyz.lilyflower.conpri.feature.TextEngine;
 
 @SuppressWarnings("unused")
 public class DialogueBoxRenderer implements NeuralDisplayModule {
@@ -22,23 +23,20 @@ public class DialogueBoxRenderer implements NeuralDisplayModule {
 
     @Override
     public void renderDebug(DrawContext context, RenderTickCounter counter) {
-        if (DialogueTextRenderer.RENDERER_STATE == DialogueTextRenderer.State.INACTIVE) {
-            DialogueTextRenderer.DRAW_POSITION_X = MagicNumbers.PORTRAIT_X + MagicNumbers.PORTRAIT_SIZE + 6;
-            DialogueTextRenderer.DRAW_POSITION_Y = MagicNumbers.PORTRAIT_Y + 1;
+        if (TextEngine.ParserVariables.STATE == TextEngine.Parser.State.INACTIVE) {
+            TextEngine.ParserVariables.DRAW_POSITION_X = MagicNumbers.PORTRAIT_X + MagicNumbers.PORTRAIT_SIZE + 6;
+            TextEngine.ParserVariables.DRAW_POSITION_Y = MagicNumbers.PORTRAIT_Y + 1;
 
-            DialogueTextRenderer.init(new DialogueTextRenderer.Message(
-                    "textures/gui/portrait/pancakes.png",
-                    null,
-                    null,
-                    ControlCodes.COLOUR_AT_INDEX + ControlCodes.colour(32, 1, 0xFF, 0xAA, 0x00) +
-                    ControlCodes.COLOUR_AT_INDEX + ControlCodes.colour(33, 1, 0xFF, 0xAA, 0x00) +
-                    ControlCodes.COLOUR_AT_INDEX + ControlCodes.colour(34, 1, 0xFF, 0xAA, 0x00) +
+            TextEngine.Parser.init(
+                ControlCodes.COLOUR_AT_INDEX + ControlCodes.colour(32, 1, 0xFF, 0xAA, 0x00) +
+                ControlCodes.COLOUR_AT_INDEX + ControlCodes.colour(33, 1, 0xFF, 0xAA, 0x00) +
+                ControlCodes.COLOUR_AT_INDEX + ControlCodes.colour(34, 1, 0xFF, 0xAA, 0x00) +
 
-                    "This is some text.. and it's now fifty characters!",
-                    "And you can have up to a max of six lines, too...",
-                    "...plus, you can even " + ControlCodes.PAUSE_FOR_FRAMES + (char) 0x32 + "pause text while parsing it!",
-                    "Or change the " + ControlCodes.CHANGE_LINE_SPEED + (char) 12 + "line speed " + ControlCodes.CHANGE_LINE_SPEED + (char) 2 + "mid-line! Also, colours." + ControlCodes.PAUSE_FOR_FRAMES + (char) 50 + " "
-            ));
+                "This is some text.. and it's now fifty characters!",
+                "And you can have up to a max of six lines, too...",
+                "...plus, you can even " + ControlCodes.PAUSE_FOR_FRAMES + (char) 0x32 + "pause text while parsing it!",
+                "Or change the " + ControlCodes.CHANGE_LINE_SPEED + (char) 12 + "line speed " + ControlCodes.CHANGE_LINE_SPEED + (char) 2 + "mid-line! Also, colours." + ControlCodes.PAUSE_FOR_FRAMES + (char) 50 + " "
+            );
         }
 
         context.fill(MagicNumbers.BORDER_PADDING, MagicNumbers.BORDER_PADDING, MagicNumbers.BORDER_WIDTH, MagicNumbers.BORDER_HEIGHT, 0, ColorHelper.Argb.getArgb(0x70, 0x00, 0x00));
@@ -49,6 +47,6 @@ public class DialogueBoxRenderer implements NeuralDisplayModule {
         context.fill(MagicNumbers.PORTRAIT_X, MagicNumbers.PORTRAIT_Y, MagicNumbers.PORTRAIT_X + MagicNumbers.PORTRAIT_SIZE, MagicNumbers.PORTRAIT_Y + MagicNumbers.PORTRAIT_SIZE, 0, ColorHelper.Argb.getArgb(0x00, 0xFF, 0x00));
         context.drawTexture(Identifier.of("conpri", CURRENT_PORTRAIT), MagicNumbers.PORTRAIT_X, MagicNumbers.PORTRAIT_Y, 0, 0, 0, MagicNumbers.PORTRAIT_SIZE, MagicNumbers.PORTRAIT_SIZE, MagicNumbers.PORTRAIT_SIZE, MagicNumbers.PORTRAIT_SIZE);
 
-        DialogueTextRenderer.update(context);
+        TextEngine.Parser.update(context);
     }
 }

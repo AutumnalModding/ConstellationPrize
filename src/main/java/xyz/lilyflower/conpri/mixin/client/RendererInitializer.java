@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.lilyflower.conpri.client.renderer.NDMM;
 import xyz.lilyflower.conpri.init.ConstellationPrizeClient;
-import xyz.lilyflower.conpri.feature.dialogue.DialogueTextRenderer;
 
 @Mixin(MinecraftClient.class)
 public class RendererInitializer {
@@ -16,8 +15,6 @@ public class RendererInitializer {
         if (NDMM.Constants.GAME_WINDOW == null) {
             NDMM.Constants.GAME_WINDOW = ConstellationPrizeClient.CLIENT_INSTANCE.getWindow();
             NDMM.Constants.HUD_INSTANCE = ConstellationPrizeClient.CLIENT_INSTANCE.inGameHud;
-
-            DialogueTextRenderer.VANILLA_RENDERER = ConstellationPrizeClient.CLIENT_INSTANCE.textRenderer;
         }
     }
 }

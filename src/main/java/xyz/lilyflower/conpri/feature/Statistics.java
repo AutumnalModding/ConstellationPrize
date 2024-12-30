@@ -1,4 +1,4 @@
-package xyz.lilyflower.conpri.feature.misc;
+package xyz.lilyflower.conpri.feature;
 
 import java.util.ArrayList;
 import net.minecraft.registry.Registries;
@@ -6,7 +6,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Identifier;
 
-public class ConstellationPrizeStatistics {
+public class Statistics {
     private static final ArrayList<Identifier> STATS = new ArrayList<>();
     private static Identifier add(String name) {
         Identifier identifier = Identifier.of("conpri", name);
