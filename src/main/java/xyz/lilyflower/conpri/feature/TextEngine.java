@@ -2,9 +2,10 @@ package xyz.lilyflower.conpri.feature;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.plaf.PanelUI;
 import net.minecraft.client.gui.DrawContext;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+
+import static xyz.lilyflower.conpri.feature.TextEngine.ParserVariables.*;
 
 public class TextEngine {
     public static class ParserVariables {
@@ -43,10 +44,10 @@ public class TextEngine {
 
 
         public static void init(String... lines) { // TODO: Replace this with a registry system
-            ArrayList<char[]> content = ParserVariables.LINE_CONTENT;
+            ArrayList<char[]> content = LINE_CONTENT;
             StringBuilder[] array = new StringBuilder[lines.length];
 
-            ParserVariables.LINE_COUNT = lines.length;
+            LINE_COUNT = lines.length;
             for (int line = 0; line < lines.length; line++) {
                 array[line] = new StringBuilder();
 
@@ -58,8 +59,8 @@ public class TextEngine {
                 content.add(text);
             }
 
-            ParserVariables.STATE = State.RUNNING;
-            ParserVariables.LINE_ARRAY = array;
+            STATE = State.RUNNING;
+            LINE_ARRAY = array;
         }
 
         public static void update(DrawContext context) {
@@ -76,20 +77,20 @@ public class TextEngine {
 //                }
 //            }
 
-            switch (ParserVariables.STATE) {
+            switch (STATE) {
                 case RUNNING -> __RunNormal();
                 case PAUSED -> __RunPaused();
             }
         }
 
         private static void __ParseControlCode() {
-            char header = ParserVariables.LINE_CONTENT.get(ParserVariables.LINE_INDEX)[++ParserVariables.LINE_POSITION];
+            char header = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
 
             for (ControlCode command : ControlCode.REGISTRY) {
                 if (command.header == header) {
                     char[] arguments = new char[command.arguments];
                     for (int arg = 0; arg < arguments.length; arg++) {
-                        arguments[arg] = ParserVariables.LINE_CONTENT.get(ParserVariables.LINE_INDEX)[++ParserVariables.LINE_POSITION];
+                        arguments[arg] = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
                     }
                     command.executor.run(arguments);
 
@@ -99,35 +100,35 @@ public class TextEngine {
         }
 
         private static void __IncrementIndex() {
-            ParserVariables.LINE_POSITION++;
+            LINE_POSITION++;
 
-            if (ParserVariables.LINE_POSITION >= ParserVariables.LINE_CONTENT.get(ParserVariables.LINE_INDEX).length) {
-                ParserVariables.LINE_POSITION = 0;
-                ParserVariables.LINE_INDEX++;
+            if (LINE_POSITION >= LINE_CONTENT.get(LINE_INDEX).length) {
+                LINE_POSITION = 0;
+                LINE_INDEX++;
 
-                if (ParserVariables.LINE_INDEX >= ParserVariables.LINE_COUNT) {
-                    ParserVariables.LINE_INDEX = 0;
-                    ParserVariables.LINE_CONTENT.clear();
-                    ParserVariables.COLOURS.clear();
+                if (LINE_INDEX >= LINE_COUNT) {
+                    LINE_INDEX = 0;
+                    LINE_CONTENT.clear();
+                    COLOURS.clear();
 
-                    for (int index = 0; index < ParserVariables.LINE_ARRAY.length; index++) {
-                        ParserVariables.LINE_ARRAY[index] = new StringBuilder();
+                    for (int index = 0; index < LINE_ARRAY.length; index++) {
+                        LINE_ARRAY[index] = new StringBuilder();
                     }
 
-                    ParserVariables.STATE = State.INACTIVE;
+                    STATE = State.INACTIVE;
                 }
             }
         }
 
         private static void __RunNormal() {
-            int index = ParserVariables.LINE_INDEX;
-            int pos = ParserVariables.LINE_POSITION;
-            StringBuilder[] lines = ParserVariables.LINE_ARRAY;
-            ArrayList<char[]> content = ParserVariables.LINE_CONTENT;
+            int index = LINE_INDEX;
+            int pos = LINE_POSITION;
+            StringBuilder[] lines = LINE_ARRAY;
+            ArrayList<char[]> content = LINE_CONTENT;
 
-            ParserVariables.LINE_DELTA++;
+            LINE_DELTA++;
 
-            if (ParserVariables.LINE_DELTA % ParserVariables.LINE_SPEED == 0) {
+            if (LINE_DELTA % LINE_SPEED == 0) {
                 char next = content.get(index)[pos];
                 if (next == 0x00) { __ParseControlCode(); } else { lines[index].append(next); }
                 __IncrementIndex();
@@ -135,12 +136,12 @@ public class TextEngine {
         }
 
         private static void __RunPaused() {
-            ParserVariables.PAUSE_DURATION_ELAPSED++;
+            PAUSE_DURATION_ELAPSED++;
 
-            if (ParserVariables.PAUSE_DURATION_ELAPSED >= ParserVariables.PAUSE_DURATION_MAX) {
-                ParserVariables.STATE = State.RUNNING;
-                ParserVariables.PAUSE_DURATION_MAX = 0;
-                ParserVariables.PAUSE_DURATION_ELAPSED = 0;
+            if (PAUSE_DURATION_ELAPSED >= PAUSE_DURATION_MAX) {
+                STATE = State.RUNNING;
+                PAUSE_DURATION_MAX = 0;
+                PAUSE_DURATION_ELAPSED = 0;
             }
         }
     }
@@ -179,8 +180,8 @@ public class TextEngine {
         public static final ControlCode COPY_TO_ARGMEM = new ControlCode(0x0D, 0x01, arguments -> {}); // TODO: Window memory system
         public static final ControlCode STORE_TO_SECMEM = new ControlCode(0x0E, 0x01, arguments -> {}); // TODO: Window memory system
         public static final ControlCode PAUSE_FOR_FRAMES = new ControlCode(0x10, 0x01, arguments -> {
-            ParserVariables.PAUSE_DURATION_MAX = arguments[0];
-            ParserVariables.STATE = Parser.State.PAUSED;
+            PAUSE_DURATION_MAX = arguments[0];
+            STATE = Parser.State.PAUSED;
         });
         // [11] -> not doing menus. FUCK that. (ok I might do it later idk)
         public static final ControlCode CLEAR_LINE = new ControlCode(0x12, 0x00, arguments -> {});
@@ -193,15 +194,15 @@ public class TextEngine {
     }
 
 //    public enum ParserCommand { // TODO: document these properly
-//        WAIT_FOR_INPUT(new char[]{0x01, 0x00}, 0, arguments -> ParserVariables.STATE = Parser.State.WAITING),
+//        WAIT_FOR_INPUT(new char[]{0x01, 0x00}, 0, arguments -> STATE = Parser.State.WAITING),
 //
 //        PAUSE_FOR_FRAMES(new char[]{0x01, 0x01}, 1, arguments -> {
-//            ParserVariables.PAUSE_DURATION_MAX = arguments[0];
-//            ParserVariables.STATE = Parser.State.PAUSED;
+//            PAUSE_DURATION_MAX = arguments[0];
+//            STATE = Parser.State.PAUSED;
 //        }),
 //
 //        SET_LINE_SPEED(new char[]{0x01, 0x02}, 1, arguments -> {
-//            ParserVariables.LINE_SPEED = arguments[0] == 0x00 ? 0 : arguments[0]; // TODO: line speed config
+//            LINE_SPEED = arguments[0] == 0x00 ? 0 : arguments[0]; // TODO: line speed config
 //        }),
 //
 //        SET_COLOUR(new char[]{0x02, 0x00}, 5, arguments -> {
@@ -213,11 +214,11 @@ public class TextEngine {
 //
 //            int colour = red << 16 | green << 8 | blue;
 //
-//            ParserVariables.COLOURS.put(new ImmutablePair<>(index, line), colour);
+//            COLOURS.put(new ImmutablePair<>(index, line), colour);
 //        }),
 //
 //        CLEAR_COLOURS(new char[]{0x02, 0x01}, 0, arguments -> {
-//            ParserVariables.COLOURS.clear();
+//            COLOURS.clear();
 //        })
 //
 //        ;

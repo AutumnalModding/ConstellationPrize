@@ -15,6 +15,7 @@ public class Statistics {
     }
 
     public static final Identifier STARS_EXPLODED = add("stars_exploded");
+//    public static final Identifier STARS_CONSTRUCTED = add("stars_constructed");
 
     public static void init() {
         for (Identifier stat : STATS) {

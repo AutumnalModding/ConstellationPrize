@@ -4,8 +4,12 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import xyz.lilyflower.conpri.client.renderer.module.NeuralDisplayModule;
 import xyz.lilyflower.conpri.feature.TextEngine;
+import xyz.lilyflower.conpri.init.ConstellationPrizeClient;
+
+import static xyz.lilyflower.conpri.feature.TextEngine.ParserVariables.*;
 
 @SuppressWarnings("unused")
 public class DialogueBoxRenderer implements NeuralDisplayModule {
@@ -23,9 +27,9 @@ public class DialogueBoxRenderer implements NeuralDisplayModule {
 
     @Override
     public void renderDebug(DrawContext context, RenderTickCounter counter) {
-        if (TextEngine.ParserVariables.STATE == TextEngine.Parser.State.INACTIVE) {
-            TextEngine.ParserVariables.DRAW_POSITION_X = MagicNumbers.PORTRAIT_X + MagicNumbers.PORTRAIT_SIZE + 6;
-            TextEngine.ParserVariables.DRAW_POSITION_Y = MagicNumbers.PORTRAIT_Y + 1;
+        if (STATE == TextEngine.Parser.State.INACTIVE) {
+            DRAW_POSITION_X = MagicNumbers.PORTRAIT_X + MagicNumbers.PORTRAIT_SIZE + 6;
+            DRAW_POSITION_Y = MagicNumbers.PORTRAIT_Y + 1;
 
             TextEngine.Parser.init(
                 ControlCodes.COLOUR_AT_INDEX + ControlCodes.colour(32, 1, 0xFF, 0xAA, 0x00) +
@@ -48,5 +52,19 @@ public class DialogueBoxRenderer implements NeuralDisplayModule {
         context.drawTexture(Identifier.of("conpri", CURRENT_PORTRAIT), MagicNumbers.PORTRAIT_X, MagicNumbers.PORTRAIT_Y, 0, 0, 0, MagicNumbers.PORTRAIT_SIZE, MagicNumbers.PORTRAIT_SIZE, MagicNumbers.PORTRAIT_SIZE, MagicNumbers.PORTRAIT_SIZE);
 
         TextEngine.Parser.update(context);
+
+        try {
+            for (int line = 0; line <= LINE_INDEX; line++) {
+                int offset = 0;
+                String[] text = LINE_ARRAY[line].toString().split("");
+                for (int index = 0; index < text.length; index++) {
+                    String character = text[index];
+                    int colour = COLOURS.getOrDefault(new ImmutablePair<>(index, line), 0xFFFFFF);
+
+                    context.drawText(ConstellationPrizeClient.CLIENT_INSTANCE.textRenderer, character, DRAW_POSITION_X + offset, DRAW_POSITION_Y + (line * 11), colour, true);
+                    offset += ConstellationPrizeClient.CLIENT_INSTANCE.textRenderer.getWidth(character);
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException ignored) {} // TODO: why the fuck does this work?
     }
 }
