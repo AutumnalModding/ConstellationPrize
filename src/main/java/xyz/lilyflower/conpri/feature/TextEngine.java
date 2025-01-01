@@ -2,7 +2,6 @@ package xyz.lilyflower.conpri.feature;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import net.minecraft.client.gui.DrawContext;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import static xyz.lilyflower.conpri.feature.TextEngine.ParserVariables.*;
@@ -63,23 +62,35 @@ public class TextEngine {
             LINE_ARRAY = array;
         }
 
-        public static void update(DrawContext context) {
-
-//            for (int line = 0; line <= LINE_INDEX; line++) {
-//                int offset = 0;
-//                String[] text = LINE_ARRAY[line].toString().split("");
-//                for (int index = 0; index < text.length; index++) {
-//                    String character = text[index];
-//                    int colour = CHARACTER_COLOURS.getOrDefault(new ImmutablePair<>(index, line), 0xFFFFFF);
-//
-//                    context.drawText(VANILLA_RENDERER, character, DRAW_POSITION_X + offset, DRAW_POSITION_Y + (line * 11), colour, true);
-//                    offset += VANILLA_RENDERER.getWidth(character);
-//                }
-//            }
-
+        public static void update() {
             switch (STATE) {
                 case RUNNING -> __RunNormal();
                 case PAUSED -> __RunPaused();
+            }
+        }
+
+        private static void __RunNormal() {
+            int index = LINE_INDEX;
+            int pos = LINE_POSITION;
+            StringBuilder[] lines = LINE_ARRAY;
+            ArrayList<char[]> content = LINE_CONTENT;
+
+            LINE_DELTA++;
+
+            if (LINE_DELTA % LINE_SPEED == 0) {
+                char next = content.get(index)[pos];
+                if (next == 0x00) { __ParseControlCode(); } else { lines[index].append(next); }
+                __IncrementIndex();
+            }
+        }
+
+        private static void __RunPaused() {
+            PAUSE_DURATION_ELAPSED++;
+
+            if (PAUSE_DURATION_ELAPSED >= PAUSE_DURATION_MAX) {
+                STATE = State.RUNNING;
+                PAUSE_DURATION_MAX = 0;
+                PAUSE_DURATION_ELAPSED = 0;
             }
         }
 
@@ -119,31 +130,6 @@ public class TextEngine {
                 }
             }
         }
-
-        private static void __RunNormal() {
-            int index = LINE_INDEX;
-            int pos = LINE_POSITION;
-            StringBuilder[] lines = LINE_ARRAY;
-            ArrayList<char[]> content = LINE_CONTENT;
-
-            LINE_DELTA++;
-
-            if (LINE_DELTA % LINE_SPEED == 0) {
-                char next = content.get(index)[pos];
-                if (next == 0x00) { __ParseControlCode(); } else { lines[index].append(next); }
-                __IncrementIndex();
-            }
-        }
-
-        private static void __RunPaused() {
-            PAUSE_DURATION_ELAPSED++;
-
-            if (PAUSE_DURATION_ELAPSED >= PAUSE_DURATION_MAX) {
-                STATE = State.RUNNING;
-                PAUSE_DURATION_MAX = 0;
-                PAUSE_DURATION_ELAPSED = 0;
-            }
-        }
     }
 
     @SuppressWarnings("unused") // for the love of fuck IDEA please shush :3
@@ -167,29 +153,25 @@ public class TextEngine {
             REGISTRY.add(this);
         }
 
-        public static final ControlCode HALT_WITH_PROMPT = new ControlCode(0x03, 0x0, arguments -> {}); // TODO: Window system
+        public static final ControlCode HALT_WITH_PROMPT = new ControlCode(0x03, 0x0, arguments -> {}); // TODO: Halting
         public static final ControlCode TOGGLE_FLAG_ENABLED = new ControlCode(0x04, 0x01, arguments -> {}); // TODO: Event flags
         public static final ControlCode TOGGLE_FLAG_DISABLED = new ControlCode(0x05, 0x01, arguments -> {}); // TODO: Event flags
         public static final ControlCode FLAG_BASED_JUMP = new ControlCode(0x06, 0x03, arguments1 -> {}); // TODO: Text registry
-        public static final ControlCode GET_FLAG_STATE = new ControlCode(0x07, 0x01, arguments -> {}); // TODO: Window memory system
+        public static final ControlCode GET_FLAG_STATE = new ControlCode(0x07, 0x01, arguments -> {}); // TODO: Memory system
         public static final ControlCode CALL_ADDRESS = new ControlCode(0x08, 0x02, arguments -> {}); // TODO: Text registry
-        // [09 XX (YY YY YY YY)] -> not fucking doing multiple address jump. nope. fuck that. not happening.
+        // [09 XX (YY YY YY YY)] -> this one needs a special case
         public static final ControlCode JUMP_ADDRESS = new ControlCode(0x0A, 0x02, arguments -> {}); // TODO: Text registry
-        public static final ControlCode BOOLEAN_EQUALITY_TRUE = new ControlCode(0x0B, 0x01, arguments -> {}); // TODO: Window memory system
-        public static final ControlCode BOOLEAN_EQUALITY_FALSE = new ControlCode(0x0C, 0x01, arguments -> {}); // TODO: Window memory system
-        public static final ControlCode COPY_TO_ARGMEM = new ControlCode(0x0D, 0x01, arguments -> {}); // TODO: Window memory system
-        public static final ControlCode STORE_TO_SECMEM = new ControlCode(0x0E, 0x01, arguments -> {}); // TODO: Window memory system
+        public static final ControlCode BOOLEAN_EQUALITY_TRUE = new ControlCode(0x0B, 0x01, arguments -> {}); // TODO: Memory system
+        public static final ControlCode BOOLEAN_EQUALITY_FALSE = new ControlCode(0x0C, 0x01, arguments -> {}); // TODO: Memory system
+        public static final ControlCode COPY_TO_ARGMEM = new ControlCode(0x0D, 0x01, arguments -> {}); // TODO: Memory system
+        public static final ControlCode STORE_TO_SECMEM = new ControlCode(0x0E, 0x01, arguments -> {}); // TODO: Memory system
         public static final ControlCode PAUSE_FOR_FRAMES = new ControlCode(0x10, 0x01, arguments -> {
             PAUSE_DURATION_MAX = arguments[0];
             STATE = Parser.State.PAUSED;
         });
-        // [11] -> not doing menus. FUCK that. (ok I might do it later idk)
+        // [11] -> this one ALSO needs a special case lmfao
         public static final ControlCode CLEAR_LINE = new ControlCode(0x12, 0x00, arguments -> {});
-        public static final ControlCode HALT_WITHOUT_PROMPT = new ControlCode(0x13, 0x00, arguments -> {}); // TODO: Window system
-        // [14] -> No need for a second Halt Parsing With Prompt control code. This is a relic of EB's weird-ass parser.
-        // [15] -> No need for compressed text blocks. ROM space isn't a thing we have to worry about~
-        // [16] -> See above
-        // [17] -> See above
+        public static final ControlCode HALT_WITHOUT_PROMPT = new ControlCode(0x13, 0x00, arguments -> {}); // TODO: Halting
 
     }
 
