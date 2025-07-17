@@ -5,7 +5,7 @@
     "name": "Constellation Prize",
     "description": "? ? ?",
     "authors": [
-        "LilyflowerFDL / SpectreiCyanogen"
+        "Fractalflower"
     ],
     "license": "GPLv3",
     "icon": "assets/conpri/icon.png",
@@ -27,8 +27,8 @@
         "conpri.mixins.json"
     ],
     "depends": {
-        "fabricloader": ">=0.16.9",
-        "minecraft": "~1.21.1",
+        "fabricloader": ">=0.16.14",
+        "minecraft": "~1.21.5",
         "java": ">=21",
         "fabric-api": "*"
     }

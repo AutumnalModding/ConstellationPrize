@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.ColorHelper;
@@ -55,7 +56,7 @@ public class DialogueTextRenderer {
         DialogueBoxRenderer.CURRENT_PORTRAIT = message.portrait;
     }
     
-    static void update(DrawContext context) {
+    static void update(DrawContext context, RenderTickCounter counter) {
         for (int line = 0; line <= LINE_INDEX; line++) {
             int offset = 0;
             String[] text = LINE_ARRAY[line].toString().split("");
@@ -69,8 +70,11 @@ public class DialogueTextRenderer {
         }
 
         switch (RENDERER_STATE) {
-            case RUNNING -> {
-                LINE_DELTA++;
+            case RUNNING -> {;
+                if (Float.compare(counter.getTickProgress(false), 0) == 0) {
+                    LINE_DELTA++;
+                    System.out.println("Updating line delta");
+                }
 
                 if (LINE_DELTA % LINE_SPEED == 0) {
                     if (CURRENT_MESSAGE.talksound != null) {

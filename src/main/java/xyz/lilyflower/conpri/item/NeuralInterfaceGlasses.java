@@ -5,11 +5,14 @@ import dev.emi.trinkets.api.TrinketItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.Identifier;
 import xyz.lilyflower.conpri.client.renderer.NDMM;
 
 public class NeuralInterfaceGlasses extends TrinketItem {
     public NeuralInterfaceGlasses() {
-        super(new Item.Settings().maxCount(1));
+        super(new Item.Settings().maxCount(1).registryKey(RegistryKey.of(RegistryKeys.ITEM, Identifier.of("conpri", "neural_glasses"))));
     }
 
     public enum Type {

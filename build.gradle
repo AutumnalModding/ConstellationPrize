@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -11,25 +11,8 @@ base {
 }
 
 repositories {
-    maven {
-        name = "TerraformersMC"
-        url = "https://maven.terraformersmc.com/"
-    }
-    maven {
-        name = "Ladysnake Libs"
-        url = 'https://maven.ladysnake.org/releases'
-    }
-
-    exclusiveContent {
-        forRepository {
-            maven {
-                url "https://cursemaven.com"
-            }
-        }
-        filter {
-            includeGroup "curse.maven"
-        }
-    }
+    maven { name = "Modrinth"; url = "https://api.modrinth.com/maven" }
+    maven { name = "CurseMaven"; url "https://cursemaven.com" }
 }
 
 fabricApi {
@@ -40,19 +23,14 @@ fabricApi {
 
 dependencies {
     // To change the versions see the gradle.properties file
-    minecraft "com.mojang:minecraft:${project.game_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_version}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.api_version}"
+    minecraft "com.mojang:minecraft:1.21.5"
+    mappings "net.fabricmc:yarn:1.21.5+build.1:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.16.14"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.128.1+1.21.5"
 
-    modImplementation "dev.emi:trinkets:${project.trinkets_version}"
-    include "dev.emi:trinkets:${project.trinkets_version}"
-
-    modImplementation 'org.reflections:reflections:0.10.2'
-    include 'org.reflections:reflections:0.10.2'
-
-    modRuntimeOnly "curse.maven:ears-412013:5433820" // I want my skin support damnit
-
+    implementation(include 'org.javassist:javassist:3.29.2-GA')
+    implementation(include 'org.reflections:reflections:0.10.2')
+    modImplementation(include 'maven.modrinth:trinkets-canary:3.11.0-1.21.5')
 }
 
 processResources {
@@ -68,9 +46,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
     withSourcesJar()
 
     sourceCompatibility = JavaVersion.VERSION_21
@@ -83,20 +58,11 @@ jar {
     }
 }
 
-// configure the maven publication
 publishing {
     publications {
         create("mavenJava", MavenPublication) {
             artifactId = project.archives_base_name
             from components.java
         }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
     }
 }
