@@ -1,11 +1,9 @@
 {
     "required": true,
-    "package": "xyz.lilyflower.conpri.mixin",
+    "package": "xyz.lilyflower.conpri.client.mixin",
     "compatibilityLevel": "JAVA_21",
-    "mixins": [
-    ],
     "client": [
-      "client.RendererInitializer"
+      "RendererInitializer"
     ],
     "injectors": {
         "defaultRequire": 1

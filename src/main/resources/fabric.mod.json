@@ -24,7 +24,7 @@
         ]
     },
     "mixins": [
-        "conpri.mixins.json"
+        "conpri.client.mixins.json"
     ],
     "depends": {
         "fabricloader": ">=0.16.14",

@@ -1,4 +1,4 @@
-package xyz.lilyflower.conpri.client.renderer;
+package xyz.lilyflower.conpri.client.display;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -12,14 +12,14 @@ import net.minecraft.client.util.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.reflections.Reflections;
-import xyz.lilyflower.conpri.client.renderer.module.NeuralDisplayModule;
+import xyz.lilyflower.conpri.client.display.module.GenericModule;
 import xyz.lilyflower.conpri.init.ConstellationPrize;
 
-public class NDMM {
-    private static final List<NeuralDisplayModule> MODULES = new ArrayList<>();
+public class DisplayManager {
+    private static final List<GenericModule> MODULES = new ArrayList<>();
     private static final Logger LOGGER = LogManager.getLogger("Neural Display Module Manager");
 
-    public static final NDMM INSTANCE = new NDMM();
+    public static final DisplayManager INSTANCE = new DisplayManager();
     public static boolean GLASSES_EQUIPPED = false;
 
     public static void load() {
@@ -36,13 +36,13 @@ public class NDMM {
         };
 
         Reflections reflections = new Reflections(path);
-        Set<Class<? extends NeuralDisplayModule>> modules = reflections.getSubTypesOf(NeuralDisplayModule.class);
+        Set<Class<? extends GenericModule>> modules = reflections.getSubTypesOf(GenericModule.class);
 
-        for (Class<? extends NeuralDisplayModule> clazz : modules) {
+        for (Class<? extends GenericModule> clazz : modules) {
             ConstellationPrize.LOGGER.info("Found diplay module {}", clazz.getSimpleName());
             try {
-                Constructor<? extends NeuralDisplayModule> constructor = clazz.getConstructor();
-                NeuralDisplayModule module = constructor.newInstance();
+                Constructor<? extends GenericModule> constructor = clazz.getConstructor();
+                GenericModule module = constructor.newInstance();
                 MODULES.add(module);
             } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException exception) {
                 throw new RuntimeException(exception);
@@ -51,10 +51,10 @@ public class NDMM {
     }
 
     public void run(DrawContext context, RenderTickCounter counter) {
-        for (NeuralDisplayModule module : MODULES) {
+        for (GenericModule module : MODULES) {
             if (GLASSES_EQUIPPED && module.shouldRender()) {
                 module.render(context, counter);
-            } else if (NeuralDisplayModule.DEBUG_MODE) {
+            } else if (GenericModule.DEBUG_MODE) {
                 module.renderDebug(context, counter);
             }
         }

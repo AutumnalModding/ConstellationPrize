@@ -1,10 +1,10 @@
-package xyz.lilyflower.conpri.client.renderer.module;
+package xyz.lilyflower.conpri.client.display.module;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 
-public interface NeuralDisplayModule {
+public interface GenericModule {
     boolean DEBUG_MODE = FabricLoader.getInstance().isDevelopmentEnvironment();
 
     boolean shouldRender();

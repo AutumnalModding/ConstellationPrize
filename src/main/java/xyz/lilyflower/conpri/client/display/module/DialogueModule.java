@@ -1,19 +1,41 @@
-package xyz.lilyflower.conpri.feature.dialogue;
+package xyz.lilyflower.conpri.client.display.module;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
-import xyz.lilyflower.conpri.client.renderer.module.NeuralDisplayModule;
+import xyz.lilyflower.conpri.text.EngineState;
+import xyz.lilyflower.conpri.text.parser.ReadaheadParser;
+import xyz.lilyflower.conpri.text.TextEngine;
+import xyz.lilyflower.conpri.client.display.util.MagicNumbers;
 
 @SuppressWarnings("unused")
-public class DialogueBoxRenderer implements NeuralDisplayModule {
+public class DialogueModule implements GenericModule {
     public static String CURRENT_PORTRAIT = "";
+    private static final ArrayList<String> LINES = new ArrayList<>();
+    private static boolean ACTIVE = false;
+
+    public static void init(String... keys) {
+        LINES.clear();
+        String[] unparsed = new String[keys.length];
+        boolean first = true;
+        for (int index = 0; index < keys.length; index++) {
+            unparsed[index] = I18n.translate(keys[index]);
+        }
+
+        String[] parsed = ReadaheadParser.parse(unparsed);
+        LINES.addAll(Arrays.asList(parsed));
+
+        ACTIVE = true;
+    }
 
     @Override
     public boolean shouldRender() {
-        return false;
+        return ACTIVE;
     }
 
     @Override
@@ -23,22 +45,15 @@ public class DialogueBoxRenderer implements NeuralDisplayModule {
 
     @Override
     public void renderDebug(DrawContext context, RenderTickCounter counter) {
-        if (DialogueTextRenderer.RENDERER_STATE == DialogueTextRenderer.State.INACTIVE) {
-            DialogueTextRenderer.DRAW_POSITION_X = MagicNumbers.PORTRAIT_X + MagicNumbers.PORTRAIT_SIZE + 6;
-            DialogueTextRenderer.DRAW_POSITION_Y = MagicNumbers.PORTRAIT_Y + 1;
+        if (!EngineState.isActive()) {
+            init("dialogue.conpri.debug_1", "dialogue.conpri.debug_2", "dialogue.conpri.debug_3");
+            EngineState.setPosition(MagicNumbers.PORTRAIT_X + MagicNumbers.PORTRAIT_SIZE + 6, MagicNumbers.PORTRAIT_Y + 1);
 
-            DialogueTextRenderer.init(new DialogueTextRenderer.Message(
+            TextEngine.init(new TextEngine.Message(
                     "textures/gui/portrait/pancakes.png",
                     null,
                     null,
-                    ControlCodes.COLOUR_AT_INDEX + ControlCodes.colour(32, 1, 0xFF, 0xAA, 0x00) +
-                    ControlCodes.COLOUR_AT_INDEX + ControlCodes.colour(33, 1, 0xFF, 0xAA, 0x00) +
-                    ControlCodes.COLOUR_AT_INDEX + ControlCodes.colour(34, 1, 0xFF, 0xAA, 0x00) +
-
-                    "This is some text.. and it's now fifty characters!",
-                    "And you can have up to a max of six lines, too...",
-                    "...plus, you can even " + ControlCodes.PAUSE_FOR_FRAMES + (char) 0x32 + "pause text while parsing it!",
-                    "Or change the " + ControlCodes.CHANGE_LINE_SPEED + (char) 12 + "line speed " + ControlCodes.CHANGE_LINE_SPEED + (char) 2 + "mid-line! Also, colours." + ControlCodes.PAUSE_FOR_FRAMES + (char) 50 + " "
+                    LINES.toArray(new String[0])
             ));
         }
 
@@ -50,6 +65,6 @@ public class DialogueBoxRenderer implements NeuralDisplayModule {
         context.fill(MagicNumbers.PORTRAIT_X, MagicNumbers.PORTRAIT_Y, MagicNumbers.PORTRAIT_X + MagicNumbers.PORTRAIT_SIZE, MagicNumbers.PORTRAIT_Y + MagicNumbers.PORTRAIT_SIZE, 0, ColorHelper.getArgb(0x00, 0xFF, 0x00));
         context.drawTexture(RenderLayer::getGuiTextured, Identifier.of("conpri", CURRENT_PORTRAIT), MagicNumbers.PORTRAIT_X, MagicNumbers.PORTRAIT_Y, 0, 0, MagicNumbers.PORTRAIT_SIZE, MagicNumbers.PORTRAIT_SIZE, MagicNumbers.PORTRAIT_SIZE, MagicNumbers.PORTRAIT_SIZE);
 
-        DialogueTextRenderer.update(context, counter);
+        TextEngine.update(context, counter);
     }
 }
