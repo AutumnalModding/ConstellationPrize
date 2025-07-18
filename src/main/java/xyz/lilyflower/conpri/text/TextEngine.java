@@ -52,9 +52,9 @@ public class TextEngine {
         switch (STATUS) {
             case RUNNING -> {
                 try {
-                    LINE_DELTA++;
+                    LINE_DELTA += counter.getDynamicDeltaTicks();
 
-                        if (LINE_DELTA % (ConstellationPrizeClient.CLIENT_INSTANCE.getCurrentFps() / LINE_SPEED) == 0) {
+                    if (LINE_DELTA > LINE_SPEED) {
                         LINE_DELTA = 0;
                         if (CURRENT_MESSAGE.talksound != null) {
                             ConstellationPrizeClient.CLIENT_INSTANCE.getSoundManager().play(PositionedSoundInstance.master(CURRENT_MESSAGE.talksound, 1.0F, 1.0F));
@@ -116,13 +116,17 @@ public class TextEngine {
                 } catch (ArithmeticException ignored) {}
             }
 
-                case PAUSED -> {
-                PAUSE_DURATION_ELAPSED++;
+            case PAUSED -> {
+                PAUSE_DELTA += counter.getDynamicDeltaTicks();
+                if (PAUSE_DELTA > LINE_SPEED) {
+                    PAUSE_DELTA = 0;
+                    PAUSE_DURATION_ELAPSED++;
 
-                if (PAUSE_DURATION_ELAPSED >= PAUSE_DURATION_MAX) {
-                    STATUS = Status.RUNNING;
-                    PAUSE_DURATION_MAX = 0;
-                    PAUSE_DURATION_ELAPSED = 0;
+                    if (PAUSE_DURATION_ELAPSED >= PAUSE_DURATION_MAX) {
+                        STATUS = Status.RUNNING;
+                        PAUSE_DURATION_MAX = 0;
+                        PAUSE_DURATION_ELAPSED = 0;
+                    }
                 }
             }
 
@@ -151,11 +155,11 @@ public class TextEngine {
     }
 
     public static class LineSpeed {
-        public static final int FAST = 20;
-        public static final int MEDIUM = 16;
-        public static final int SLOW = 8;
-        public static final int SNAIL = 4;
-        public static final int VISCOUS = 2;
+        public static final float FAST = 0.75f;
+        public static final float MEDIUM = 1.25f;
+        public static final int SLOW = 2;
+        public static final int SNAIL = 6;
+        public static final int VISCOUS = 8;
     }
 
     enum Status {

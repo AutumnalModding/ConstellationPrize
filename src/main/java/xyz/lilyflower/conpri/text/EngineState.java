@@ -10,6 +10,7 @@ public class EngineState {
     static TextEngine.Message CURRENT_MESSAGE;
     static int PAUSE_DURATION_ELAPSED = 0;
     static int PAUSE_DURATION_MAX = 0;
+    static float PAUSE_DELTA = 0;
     static TextEngine.Status STATUS = TextEngine.Status.INACTIVE;
     static int BLINK_DELTA_CHARACTER = 0;
     static int BLINK_DELTA_DISPLAY = 0;
@@ -18,8 +19,8 @@ public class EngineState {
     static HashMap<ImmutablePair<Integer, Integer>, Integer> CHARACTER_COLOURS = new HashMap<>();
     static ArrayList<char[]> LINE_CONTENT = new ArrayList<>();
     static StringBuilder[] LINE_ARRAY;
-    static int LINE_DELTA = 0;
-    static int LINE_SPEED = TextEngine.LineSpeed.FAST;
+    static float LINE_DELTA = 0;
+    static float LINE_SPEED = TextEngine.LineSpeed.FAST;
     static int LINE_INDEX = 0;
     static int LINE_POSITION = 0;
     static int LINE_COUNT = 0;
