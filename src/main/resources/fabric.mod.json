@@ -21,6 +21,10 @@
 
         "fabric-datagen": [
             "xyz.lilyflower.conpri.init.ConstellationPrizeDataGenerator"
+        ],
+
+        "cardinal-components": [
+            "xyz.lilyflower.conpri.init.ConstellationPrizeComponents"
         ]
     },
     "mixins": [
@@ -31,5 +35,10 @@
         "minecraft": "~1.21.5",
         "java": ">=21",
         "fabric-api": "*"
+    },
+    "custom": {
+        "cardinal-components": [
+            "conpri:flags"
+        ]
     }
 }

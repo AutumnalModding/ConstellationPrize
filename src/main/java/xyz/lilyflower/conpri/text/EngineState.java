@@ -2,7 +2,6 @@ package xyz.lilyflower.conpri.text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 import net.minecraft.client.font.TextRenderer;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 

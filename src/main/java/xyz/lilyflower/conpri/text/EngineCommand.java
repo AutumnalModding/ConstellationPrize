@@ -2,8 +2,13 @@ package xyz.lilyflower.conpri.text;
 
 import java.util.Random;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import xyz.lilyflower.conpri.entity.component.PlayerEventFlagsComponent;
+import xyz.lilyflower.conpri.init.ConstellationPrizeClient;
+import xyz.lilyflower.conpri.init.ConstellationPrizeComponents;
+
 import static xyz.lilyflower.conpri.text.EngineState.*;
 
+@SuppressWarnings({"DataFlowIssue", "unused"})
 enum EngineCommand {
     WAIT_FOR_INPUT(new char[]{0x01, 0x00}, 0, argv -> STATUS = TextEngine.Status.WAITING),
 
@@ -63,7 +68,50 @@ enum EngineCommand {
         for (int index = 0; index < stackify(argv[0]); index++) {
             STACK.add((char) new Random().nextInt(Character.MIN_VALUE, Character.MAX_VALUE));
         }
-    })
+    }),
+
+    ENABLE_FLAG(new char[]{0x04, 0x00}, 2, argv -> {
+        PlayerEventFlagsComponent component = ConstellationPrizeComponents.EVENT_FLAGS.get(ConstellationPrizeClient.CLIENT_INSTANCE.player);
+
+        char upper = stackify(argv[0]);
+        char lower = stackify(argv[1]);
+        char flag = (char) Integer.parseInt(Integer.toHexString(upper) + Integer.toHexString(lower), 16);
+
+        component.updateFlagState(flag, true);
+    }),
+
+    DISABLE_FLAG(new char[]{0x04, 0x01}, 2, argv -> {
+        PlayerEventFlagsComponent component = ConstellationPrizeComponents.EVENT_FLAGS.get(ConstellationPrizeClient.CLIENT_INSTANCE.player);
+
+        char upper = stackify(argv[0]);
+        char lower = stackify(argv[1]);
+        char flag = (char) Integer.parseInt(Integer.toHexString(upper) + Integer.toHexString(lower), 16);
+
+        component.updateFlagState(flag, false);
+    }),
+
+    LOAD_FLAG(new char[]{0x04, 0x03}, 2, argv -> {
+        PlayerEventFlagsComponent component = ConstellationPrizeComponents.EVENT_FLAGS.get(ConstellationPrizeClient.CLIENT_INSTANCE.player);
+
+        char upper = stackify(argv[0]);
+        char lower = stackify(argv[1]);
+        char flag = (char) Integer.parseInt(Integer.toHexString(upper) + Integer.toHexString(lower), 16);
+
+        char value = (char) (component.getFlag(flag) ? 1 : 0);
+
+        STACK.addFirst(value);
+    }),
+
+    DEBUG_FLAG(new char[]{0x04, 0x04}, 2, argv -> {
+        PlayerEventFlagsComponent component = ConstellationPrizeComponents.EVENT_FLAGS.get(ConstellationPrizeClient.CLIENT_INSTANCE.player);
+
+        char upper = stackify(argv[0]);
+        char lower = stackify(argv[1]);
+        char flag = (char) Integer.parseInt(Integer.toHexString(upper) + Integer.toHexString(lower), 16);
+
+        char value = (char) (component.getFlag(flag) ? 1 : 0);
+        System.out.println(value);
+    }),
 
     ;
 

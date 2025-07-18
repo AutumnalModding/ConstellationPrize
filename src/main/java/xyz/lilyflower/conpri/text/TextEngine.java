@@ -56,9 +56,6 @@ public class TextEngine {
 
                     if (LINE_DELTA > LINE_SPEED) {
                         LINE_DELTA = 0;
-                        if (CURRENT_MESSAGE.talksound != null) {
-                            ConstellationPrizeClient.CLIENT_INSTANCE.getSoundManager().play(PositionedSoundInstance.master(CURRENT_MESSAGE.talksound, 1.0F, 1.0F));
-                        }
 
                         if (LINE_POSITION >= LINE_CONTENT.get(LINE_INDEX).length && !isWaiting()) {
                             LINE_POSITION = 0;
@@ -97,6 +94,9 @@ public class TextEngine {
                                 }
                             } else {
                                 LINE_ARRAY[LINE_INDEX].append(next);
+                                if (CURRENT_MESSAGE.talksound != null) {
+                                    ConstellationPrizeClient.CLIENT_INSTANCE.getSoundManager().play(PositionedSoundInstance.master(CURRENT_MESSAGE.talksound, 1.0F, 1.0F));
+                                }
                             }
 
                             LINE_POSITION++;
@@ -154,6 +154,7 @@ public class TextEngine {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class LineSpeed {
         public static final float FAST = 0.75f;
         public static final float MEDIUM = 1.25f;

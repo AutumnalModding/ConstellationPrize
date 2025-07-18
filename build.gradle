@@ -13,6 +13,7 @@ base {
 repositories {
     maven { name = "CurseMaven"; url "https://cursemaven.com" }
     maven { name = "Modrinth"; url = "https://api.modrinth.com/maven" }
+    maven { name = "Ladysnake Mods"; url = 'https://maven.ladysnake.org/releases' }
 }
 
 fabricApi {
@@ -31,6 +32,9 @@ dependencies {
     implementation(include 'org.javassist:javassist:3.29.2-GA')
     implementation(include 'org.reflections:reflections:0.10.2')
     modImplementation(include 'maven.modrinth:trinkets-canary:3.11.0-1.21.5')
+
+    modApi(include 'org.ladysnake.cardinal-components-api:cardinal-components-base:6.3.1')
+    modApi(include 'org.ladysnake.cardinal-components-api:cardinal-components-entity:6.3.1')
 }
 
 processResources {

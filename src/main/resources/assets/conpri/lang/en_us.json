@@ -7,5 +7,5 @@
   "dialogue.conpri.debug_2": "And you can STILL have a max of six lines, too...",
   "dialogue.conpri.debug_3": "Also, pausing for frames still works with this.",
   "dialogue.conpri.debug_4": "[03 06 0F][03 02][02 00 00 00 00 18 01][02 00 00 00 00 19 01][02 00 00 00 00 1A 01][02 00 00 00 00 1B 01][02 00 00 00 00 1C 01]test [01 01 14] line",
-  "dialogue.conpri.debug_5": "Did I mention there's a stack?[03 03][01 03]"
+  "dialogue.conpri.debug_5": "[04 00 69 FF]Did I mention there's a stack?[03 03][01 03]"
 }
