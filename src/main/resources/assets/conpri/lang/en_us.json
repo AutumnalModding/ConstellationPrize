@@ -1,9 +1,7 @@
 {
-  "trinkets.slot.conpri.niglasses": "Neural Interface Glasses",
-
-  "item.conpri.neural_interface": "Neural Interface Glasses",
-
   "stat.conpri.stars_exploded": "Stars Blown Up for Profit",
+  "item.conpri.neural_interface": "Neural Interface Glasses",
+  "trinkets.slot.conpri.niglasses": "Neural Interface Glasses",
 
   "dialogue.conpri.debug_1": "[02 00 FF AA 00 20 01][02 00 FF AA 00 21 01][02 00 FF AA 00 22 01]This is some text... and it's now lang-translated!",
   "dialogue.conpri.debug_2": "And you can STILL have a max of six lines, too...[01 00]",

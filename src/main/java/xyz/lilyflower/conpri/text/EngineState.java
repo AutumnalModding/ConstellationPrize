@@ -10,7 +10,8 @@ public class EngineState {
     static int PAUSE_DURATION_ELAPSED = 0;
     static int PAUSE_DURATION_MAX = 0;
     static TextEngine.Status STATUS = TextEngine.Status.INACTIVE;
-    static int BLINK_DELTA = 0;
+    static int BLINK_DELTA_CHARACTER = 0;
+    static int BLINK_DELTA_DISPLAY = 0;
     static int DRAW_POSITION_Y = 0;
     static int DRAW_POSITION_X = 0;
     static HashMap<ImmutablePair<Integer, Integer>, Integer> CHARACTER_COLOURS = new HashMap<>();

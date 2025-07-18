@@ -1,6 +1,11 @@
-package xyz.lilyflower.conpri.text.parser;
+package xyz.lilyflower.conpri.text.util;
+
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 public class ReadaheadParser {
+    private static final Predicate<String> IS_CONTROL_CODE = Pattern.compile("[0-9A-F][0-9A-F] [0-9A-F][0-9A-F]").asMatchPredicate();
+
     public static String[] parse(String... input) {
         String[] parsed = new String[input.length];
         StringBuilder[] builders = new StringBuilder[parsed.length];
@@ -22,7 +27,7 @@ public class ReadaheadParser {
                             maybeCode.append(there);
                         } catch (IndexOutOfBoundsException ignored) {}
                     }
-                    if (maybeCode.toString().matches("[0-9A-F][0-9A-F] [0-9A-F][0-9A-F]")) {
+                    if (IS_CONTROL_CODE.test(String.valueOf(maybeCode))) {
                         target = "";
                         StringBuilder code = new StringBuilder();
                         builders[position].append((char) 0x00);

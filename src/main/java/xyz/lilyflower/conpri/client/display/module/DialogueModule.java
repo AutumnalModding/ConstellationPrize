@@ -7,9 +7,10 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.ColorHelper;
 import xyz.lilyflower.conpri.text.EngineState;
-import xyz.lilyflower.conpri.text.parser.ReadaheadParser;
+import xyz.lilyflower.conpri.text.util.ReadaheadParser;
 import xyz.lilyflower.conpri.text.TextEngine;
 import xyz.lilyflower.conpri.client.display.util.MagicNumbers;
 

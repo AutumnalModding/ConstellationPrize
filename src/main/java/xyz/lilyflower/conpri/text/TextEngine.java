@@ -8,134 +8,140 @@ import net.minecraft.util.math.ColorHelper;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import xyz.lilyflower.conpri.client.display.module.DialogueModule;
 import xyz.lilyflower.conpri.init.ConstellationPrizeClient;
+import static xyz.lilyflower.conpri.text.EngineState.*;
 
 public class TextEngine {
 
     public static void init(Message message) {
-        EngineState.LINE_ARRAY = new StringBuilder[message.lines.length];
-        EngineState.LINE_COUNT = message.lines.length;
+        LINE_ARRAY = new StringBuilder[message.lines.length];
+        LINE_COUNT = message.lines.length;
 
         for (int line = 0; line < message.lines.length; line++) {
-            EngineState.LINE_ARRAY[line] = new StringBuilder();
+            LINE_ARRAY[line] = new StringBuilder();
 
             char[] text = new char[message.lines[line].length()];
             for (int i = 0; i < text.length; i++) {
                 text[i] = message.lines[line].charAt(i);
             }
 
-            EngineState.LINE_CONTENT.add(text);
+            LINE_CONTENT.add(text);
         }
 
         if (message.voiceline != null) {
             ConstellationPrizeClient.CLIENT_INSTANCE.getSoundManager().play(PositionedSoundInstance.master(message.voiceline, 1.0F, 1.0F));
         }
 
-        EngineState.STATUS = Status.RUNNING;
-        EngineState.CURRENT_MESSAGE = message;
+        STATUS = Status.RUNNING;
+        CURRENT_MESSAGE = message;
         DialogueModule.CURRENT_PORTRAIT = message.portrait;
     }
     
     public static void update(DrawContext context, RenderTickCounter counter) {
-        for (int line = 0; line <= EngineState.LINE_INDEX; line++) {
+        for (int line = 0; line <= LINE_INDEX; line++) {
             int offset = 0;
-            String[] text = EngineState.LINE_ARRAY[line].toString().split("");
+            String[] text = LINE_ARRAY[line].toString().split("");
             for (int index = 0; index < text.length; index++) {
                 String character = text[index];
-                int colour = EngineState.CHARACTER_COLOURS.getOrDefault(new ImmutablePair<>(index, line), 0xFFFFFF);
+                int colour = CHARACTER_COLOURS.getOrDefault(new ImmutablePair<>(index, line), 0xFFFFFF);
 
-                context.drawText(EngineState.VANILLA_RENDERER, character, EngineState.DRAW_POSITION_X + offset, EngineState.DRAW_POSITION_Y + (line * 11), colour, true);
-                offset += EngineState.VANILLA_RENDERER.getWidth(character);
+                context.drawText(VANILLA_RENDERER, character, DRAW_POSITION_X + offset, DRAW_POSITION_Y + (line * 11), colour, true);
+                offset += VANILLA_RENDERER.getWidth(character);
             }
         }
 
-        switch (EngineState.STATUS) {
+        switch (STATUS) {
             case RUNNING -> {
-                if (Float.compare(counter.getTickProgress(false), 0) == 0) {
-                    EngineState.LINE_DELTA++;
-                    System.out.println("Updating line delta");
-                }
+                try {
+                    LINE_DELTA++;
 
-                if (EngineState.LINE_DELTA % EngineState.LINE_SPEED == 0) {
-                    if (EngineState.CURRENT_MESSAGE.talksound != null) {
-                        ConstellationPrizeClient.CLIENT_INSTANCE.getSoundManager().play(PositionedSoundInstance.master(EngineState.CURRENT_MESSAGE.talksound, 1.0F, 1.0F));
-                    }
-
-                    if (EngineState.LINE_POSITION >= EngineState.LINE_CONTENT.get(EngineState.LINE_INDEX).length && !EngineState.isWaiting()) {
-                        EngineState.LINE_POSITION = 0;
-                        EngineState.LINE_INDEX++;
-
-                        if (EngineState.LINE_INDEX >= EngineState.LINE_COUNT) {
-                            EngineState.LINE_INDEX = 0;
-                            EngineState.LINE_CONTENT.clear();
-                            EngineState.CHARACTER_COLOURS.clear();
-
-                            for (int index = 0; index < EngineState.LINE_ARRAY.length; index++) {
-                                EngineState.LINE_ARRAY[index] = new StringBuilder();
-                            }
-
-                            EngineState.STATUS = Status.INACTIVE;
+                    if (LINE_DELTA % (ConstellationPrizeClient.CLIENT_INSTANCE.getCurrentFps() / LINE_SPEED) == 0) {
+                        LINE_DELTA = 1;
+                        if (CURRENT_MESSAGE.talksound != null) {
+                            ConstellationPrizeClient.CLIENT_INSTANCE.getSoundManager().play(PositionedSoundInstance.master(CURRENT_MESSAGE.talksound, 1.0F, 1.0F));
                         }
-                    }
 
-                    try {
-                        char next = EngineState.LINE_CONTENT.get(EngineState.LINE_INDEX)[EngineState.LINE_POSITION];
+                        if (LINE_POSITION >= LINE_CONTENT.get(LINE_INDEX).length && !isWaiting()) {
+                            LINE_POSITION = 0;
+                            LINE_INDEX++;
 
-                        if (next == 0x00) {
-                            char header_lower = EngineState.LINE_CONTENT.get(EngineState.LINE_INDEX)[++EngineState.LINE_POSITION];
-                            char header_upper = EngineState.LINE_CONTENT.get(EngineState.LINE_INDEX)[++EngineState.LINE_POSITION];
+                            if (LINE_INDEX >= LINE_COUNT) {
+                                LINE_INDEX = 0;
+                                LINE_CONTENT.clear();
+                                CHARACTER_COLOURS.clear();
 
-                            for (Command command : Command.values()) {
-                                if (command.header[0] == header_lower && command.header[1] == header_upper) {
-                                    char[] arguments = new char[command.arguments];
-                                    for (int arg = 0; arg < arguments.length; arg++) {
-                                        arguments[arg] = EngineState.LINE_CONTENT.get(EngineState.LINE_INDEX)[++EngineState.LINE_POSITION];
-                                    }
-                                    command.executor.run(arguments);
-
-                                    break;
+                                for (int index = 0; index < LINE_ARRAY.length; index++) {
+                                    LINE_ARRAY[index] = new StringBuilder();
                                 }
+
+                                STATUS = Status.INACTIVE;
                             }
-                        } else {
-                            EngineState.LINE_ARRAY[EngineState.LINE_INDEX].append(next);
                         }
 
-                        EngineState.LINE_POSITION++;
-                    } catch (IndexOutOfBoundsException ignored) {
-                        EngineState.LINE_INDEX = 0;
-                        EngineState.LINE_CONTENT.clear();
-                        EngineState.CHARACTER_COLOURS.clear();
+                        try {
+                            char next = LINE_CONTENT.get(LINE_INDEX)[LINE_POSITION];
 
-                        for (int index = 0; index < EngineState.LINE_ARRAY.length; index++) {
-                            EngineState.LINE_ARRAY[index] = new StringBuilder();
+                            if (next == 0x00) {
+                                char header_lower = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
+                                char header_upper = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
+
+                                for (Command command : Command.values()) {
+                                    if (command.header[0] == header_lower && command.header[1] == header_upper) {
+                                        char[] arguments = new char[command.arguments];
+                                        for (int arg = 0; arg < arguments.length; arg++) {
+                                            arguments[arg] = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
+                                        }
+                                        command.executor.run(arguments);
+
+                                        break;
+                                    }
+                                }
+                            } else {
+                                LINE_ARRAY[LINE_INDEX].append(next);
+                            }
+
+                            LINE_POSITION++;
+                        } catch (IndexOutOfBoundsException ignored) {
+                            LINE_INDEX = 0;
+                            LINE_CONTENT.clear();
+                            CHARACTER_COLOURS.clear();
+
+                            for (int index = 0; index < LINE_ARRAY.length; index++) {
+                                LINE_ARRAY[index] = new StringBuilder();
+                            }
+
+                            STATUS = Status.INACTIVE;
+
                         }
-
-                        EngineState.STATUS = Status.INACTIVE;
-
                     }
-                }
+                } catch (ArithmeticException ignored) {}
             }
 
             case PAUSED -> {
-                EngineState.PAUSE_DURATION_ELAPSED++;
+                PAUSE_DURATION_ELAPSED++;
 
-                if (EngineState.PAUSE_DURATION_ELAPSED >= EngineState.PAUSE_DURATION_MAX) {
-                    EngineState.STATUS = Status.RUNNING;
-                    EngineState.PAUSE_DURATION_MAX = 0;
-                    EngineState.PAUSE_DURATION_ELAPSED = 0;
+                if (PAUSE_DURATION_ELAPSED >= PAUSE_DURATION_MAX) {
+                    STATUS = Status.RUNNING;
+                    PAUSE_DURATION_MAX = 0;
+                    PAUSE_DURATION_ELAPSED = 0;
                 }
             }
 
             case WAITING -> {
-                // TODO: blink character
-                EngineState.BLINK_DELTA++;
-                String character = " ";
-                if (EngineState.BLINK_DELTA <= 35) {
-                    character = "⮟";
-                }
-                context.drawText(EngineState.VANILLA_RENDERER, character, EngineState.DRAW_POSITION_X + 237, EngineState.DRAW_POSITION_Y + 55, ColorHelper.getArgb(0xFF, 0xFF, 0xFF), true);
-                if (EngineState.BLINK_DELTA >= 70) {
-                    EngineState.BLINK_DELTA = 0;
-                }
+                try {
+                    BLINK_DELTA_DISPLAY++;
+                    if (BLINK_DELTA_DISPLAY % (ConstellationPrizeClient.CLIENT_INSTANCE.getCurrentFps() / 48) == 0) {
+                        BLINK_DELTA_CHARACTER++;
+                    }
+
+                    String character = " ";
+                    if (BLINK_DELTA_CHARACTER <= 35) {
+                        character = "⮟";
+                    }
+                    context.drawText(VANILLA_RENDERER, character, DRAW_POSITION_X + 237, DRAW_POSITION_Y + 55, ColorHelper.getArgb(0xFF, 0xFF, 0xFF), true);
+                    if (BLINK_DELTA_CHARACTER >= 70) {
+                        BLINK_DELTA_CHARACTER = 0;
+                    }
+                } catch (ArithmeticException ignored) {}
             }
 
             case HALTED -> {
@@ -145,28 +151,31 @@ public class TextEngine {
     }
 
     public static class LineSpeed {
-        public static final int FAST = 2;
-        public static final int MEDIUM = 4;
-        public static final int SLOW = 6;
-        public static final int SNAIL = 8;
-        public static final int VISCOUS = 10;
+        public static final int FAST = 20;
+        public static final int MEDIUM = 16;
+        public static final int SLOW = 8;
+        public static final int SNAIL = 4;
+        public static final int VISCOUS = 2;
     }
 
     public enum Command { // TODO: document these properly
 
-        WAIT_FOR_INPUT(new char[]{0x01, 0x00}, 0, arguments -> EngineState.STATUS = Status.WAITING),
+        // [01 00]
+        WAIT_FOR_INPUT(new char[]{0x01, 0x00}, 0, arguments -> STATUS = Status.WAITING),
 
+        // [01 01 XX]
         PAUSE_FOR_FRAMES(new char[]{0x01, 0x01}, 1, arguments -> {
-            EngineState.PAUSE_DURATION_MAX = arguments[0];
-            EngineState.STATUS = Status.PAUSED;
+            PAUSE_DURATION_MAX = arguments[0];
+            STATUS = Status.PAUSED;
         }),
 
+        //
         SET_LINE_SPEED(new char[]{0x01, 0x02}, 1, arguments -> {
-            EngineState.LINE_SPEED = arguments[0] == 0x00 ? 0 : arguments[0]; // TODO: line speed config
+            LINE_SPEED = arguments[0] == 0x00 ? 0 : arguments[0]; // TODO: line speed config
         }),
 
         HALT(new char[]{0x01, 0x03}, 0, arguments -> {
-            EngineState.STATUS = Status.HALTED;
+            STATUS = Status.HALTED;
         }),
 
         SET_COLOUR(new char[]{0x02, 0x00}, 5, arguments -> {
@@ -178,11 +187,11 @@ public class TextEngine {
             
             int colour = red << 16 | green << 8 | blue;
 
-            EngineState.CHARACTER_COLOURS.put(new ImmutablePair<>(index, line), colour);
+            CHARACTER_COLOURS.put(new ImmutablePair<>(index, line), colour);
         }),
 
         CLEAR_COLOURS(new char[]{0x02, 0x01}, 0, arguments -> {
-            EngineState.CHARACTER_COLOURS.clear();
+            CHARACTER_COLOURS.clear();
         })
 
         ;
