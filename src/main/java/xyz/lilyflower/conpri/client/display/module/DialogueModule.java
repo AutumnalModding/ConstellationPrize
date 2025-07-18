@@ -47,7 +47,7 @@ public class DialogueModule implements GenericModule {
     @Override
     public void renderDebug(DrawContext context, RenderTickCounter counter) {
         if (!EngineState.isActive()) {
-            init("dialogue.conpri.debug_1", "dialogue.conpri.debug_2", "dialogue.conpri.debug_3");
+            init("dialogue.conpri.debug_4", "dialogue.conpri.debug_5");
             EngineState.setPosition(MagicNumbers.PORTRAIT_X + MagicNumbers.PORTRAIT_SIZE + 6, MagicNumbers.PORTRAIT_Y + 1);
 
             TextEngine.init(new TextEngine.Message(

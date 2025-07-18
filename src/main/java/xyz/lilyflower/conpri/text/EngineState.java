@@ -2,6 +2,7 @@ package xyz.lilyflower.conpri.text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import net.minecraft.client.font.TextRenderer;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
@@ -23,6 +24,9 @@ public class EngineState {
     static int LINE_POSITION = 0;
     static int LINE_COUNT = 0;
     static TextRenderer VANILLA_RENDERER;
+    static HashMap<Character, Character> MEMORY;
+    static ArrayList<Character> STACK = new ArrayList<>();
+    static boolean STACK_ENABLED = false;
 
     public static void setPosition(int x, int y) {
         DRAW_POSITION_X = x;

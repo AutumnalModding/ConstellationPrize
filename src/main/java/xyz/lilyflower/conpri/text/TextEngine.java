@@ -54,8 +54,8 @@ public class TextEngine {
                 try {
                     LINE_DELTA++;
 
-                    if (LINE_DELTA % (ConstellationPrizeClient.CLIENT_INSTANCE.getCurrentFps() / LINE_SPEED) == 0) {
-                        LINE_DELTA = 1;
+                        if (LINE_DELTA % (ConstellationPrizeClient.CLIENT_INSTANCE.getCurrentFps() / LINE_SPEED) == 0) {
+                        LINE_DELTA = 0;
                         if (CURRENT_MESSAGE.talksound != null) {
                             ConstellationPrizeClient.CLIENT_INSTANCE.getSoundManager().play(PositionedSoundInstance.master(CURRENT_MESSAGE.talksound, 1.0F, 1.0F));
                         }
@@ -84,9 +84,9 @@ public class TextEngine {
                                 char header_lower = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
                                 char header_upper = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
 
-                                for (Command command : Command.values()) {
+                                for (EngineCommand command : EngineCommand.values()) {
                                     if (command.header[0] == header_lower && command.header[1] == header_upper) {
-                                        char[] arguments = new char[command.arguments];
+                                        char[] arguments = new char[command.argc];
                                         for (int arg = 0; arg < arguments.length; arg++) {
                                             arguments[arg] = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
                                         }
@@ -116,7 +116,7 @@ public class TextEngine {
                 } catch (ArithmeticException ignored) {}
             }
 
-            case PAUSED -> {
+                case PAUSED -> {
                 PAUSE_DURATION_ELAPSED++;
 
                 if (PAUSE_DURATION_ELAPSED >= PAUSE_DURATION_MAX) {
@@ -156,60 +156,6 @@ public class TextEngine {
         public static final int SLOW = 8;
         public static final int SNAIL = 4;
         public static final int VISCOUS = 2;
-    }
-
-    public enum Command { // TODO: document these properly
-
-        // [01 00]
-        WAIT_FOR_INPUT(new char[]{0x01, 0x00}, 0, arguments -> STATUS = Status.WAITING),
-
-        // [01 01 XX]
-        PAUSE_FOR_FRAMES(new char[]{0x01, 0x01}, 1, arguments -> {
-            PAUSE_DURATION_MAX = arguments[0];
-            STATUS = Status.PAUSED;
-        }),
-
-        //
-        SET_LINE_SPEED(new char[]{0x01, 0x02}, 1, arguments -> {
-            LINE_SPEED = arguments[0] == 0x00 ? 0 : arguments[0]; // TODO: line speed config
-        }),
-
-        HALT(new char[]{0x01, 0x03}, 0, arguments -> {
-            STATUS = Status.HALTED;
-        }),
-
-        SET_COLOUR(new char[]{0x02, 0x00}, 5, arguments -> {
-            int red = arguments[0];
-            int green = arguments[1];
-            int blue = arguments[2];
-            int index = arguments[3];
-            int line = arguments[4];
-            
-            int colour = red << 16 | green << 8 | blue;
-
-            CHARACTER_COLOURS.put(new ImmutablePair<>(index, line), colour);
-        }),
-
-        CLEAR_COLOURS(new char[]{0x02, 0x01}, 0, arguments -> {
-            CHARACTER_COLOURS.clear();
-        })
-
-        ;
-
-        private final char[] header;
-        private final int arguments;
-        private final Executor executor;
-
-        Command(char[] header, int arguments, Executor executor) {
-            this.header = header;
-            this.arguments = arguments;
-            this.executor = executor;
-        }
-
-        @FunctionalInterface
-        public interface Executor {
-            void run(char... arguments);
-        }
     }
 
     enum Status {
