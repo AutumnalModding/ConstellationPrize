@@ -15,12 +15,6 @@ public class NeuralInterfaceGlasses extends TrinketItem {
         super(new Item.Settings().maxCount(1).registryKey(RegistryKey.of(RegistryKeys.ITEM, Identifier.of("conpri", "neural_glasses"))));
     }
 
-    public enum Type {
-        XM186_MINDSET,
-        XM286_LUNA,
-        XM386_SOLEIl
-    }
-
     @Override
     public void onEquip(ItemStack stack, SlotReference slot, LivingEntity entity) {
         super.onEquip(stack, slot, entity);
