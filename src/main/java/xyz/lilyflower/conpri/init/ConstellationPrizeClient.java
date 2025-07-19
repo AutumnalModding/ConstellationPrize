@@ -14,7 +14,7 @@ import xyz.lilyflower.conpri.text.EngineState;
 
 @SuppressWarnings("deprecation")
 public class ConstellationPrizeClient implements ClientModInitializer {
-    private static final KeyBinding INPUT_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+    public static final KeyBinding INPUT_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
             "key.conpri.input",
             InputUtil.Type.KEYSYM,
             GLFW.GLFW_KEY_ENTER,

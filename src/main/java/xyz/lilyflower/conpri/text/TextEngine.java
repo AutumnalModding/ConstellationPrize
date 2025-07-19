@@ -8,7 +8,7 @@ import net.minecraft.util.math.ColorHelper;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import xyz.lilyflower.conpri.client.display.module.DialogueModule;
 import xyz.lilyflower.conpri.init.ConstellationPrizeClient;
-import xyz.lilyflower.conpri.text.command.AbstractEngineCommand;
+import xyz.lilyflower.conpri.text.command.AEC;
 
 import static xyz.lilyflower.conpri.text.EngineState.*;
 
@@ -82,8 +82,9 @@ public class TextEngine {
                             if (next == 0x00) {
                                 char upper = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
                                 char lower = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
+                                AEC.Type[] types = AEC.Type.values();
 
-                                AbstractEngineCommand command = AbstractEngineCommand.get(AbstractEngineCommand.Type.values()[upper-1], lower);
+                                AEC command = AEC.get(types[Math.clamp(upper - 1, 0, types.length)], lower);
                                 char[] arguments = new char[command.argc];
                                 for (int arg = 0; arg < arguments.length; arg++) {
                                     arguments[arg] = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];

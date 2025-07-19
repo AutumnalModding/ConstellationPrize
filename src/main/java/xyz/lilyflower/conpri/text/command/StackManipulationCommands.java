@@ -4,33 +4,56 @@ import java.util.Random;
 import xyz.lilyflower.conpri.text.EngineState;
 import xyz.lilyflower.conpri.text.util.CommandHelper;
 
+@SuppressWarnings("unused")
 public class StackManipulationCommands extends EngineState {
-    public static final AbstractEngineCommand REGISTER_LOAD = AbstractEngineCommand.init(AbstractEngineCommand.Type.STACK_MANIPULATION, 0x00, 2, argv -> {
-        STACK.add(MEMORY.get(CommandHelper.directCombine(argv)));
+    /// Syntax: \[03 00 XX XX] (S)
+    ///
+    /// Pushes the contents of register XX XX to the stack.
+    /// Pass registers via little-endian ordering.
+    public static final AEC REGISTER_LOAD = AEC.init(AEC.Type.STACK_MANIPULATION, 0x00, 1, argv -> {
+        STACK.add(MEMORY.get(CommandHelper.combine(argv)));
     }),
 
-    REGISTER_STORE = AbstractEngineCommand.init(AbstractEngineCommand.Type.STACK_MANIPULATION, 0x01, 3, argv -> {
-        MEMORY.put(CommandHelper.directCombine(argv), STACK.get(CommandHelper.stackify(argv[1])));
+    /// Syntax: \[03 01 XX XX] (S)
+    ///
+    /// Pops the stack and stores it in register XX XX.
+    /// Pass registers via little-endian ordering.
+    REGISTER_STORE = AEC.init(AEC.Type.STACK_MANIPULATION, 0x01, 3, argv -> {
+        MEMORY.put(CommandHelper.combine(argv), STACK.remove(CommandHelper.stackify(argv[2])));
     }),
 
-    ENABLE_STACK = AbstractEngineCommand.init(AbstractEngineCommand.Type.STACK_MANIPULATION, 0x02, 0, argv -> {
+    /// Enables stack mode.
+    /// Syntax: \[03 02]
+    /// Any commands marked with an (S) - e.g. \[01 01 XX] (S) will load their parameters from the stack, if given a 00 as input.
+    ///
+    /// For example: \[03 05] \[03 02] \[01 01 00] will pause for a random number of update frames.
+    ENABLE_STACK = AEC.init(AEC.Type.STACK_MANIPULATION, 0x02, 0, argv -> {
         STACK_ENABLED = true;
     }),
 
-    DISABLE_STACK = AbstractEngineCommand.init(AbstractEngineCommand.Type.STACK_MANIPULATION, 0x03, 0, argv -> {
+    /// Disables stack mode.
+    /// Syntax: \[03 03]
+    DISABLE_STACK = AEC.init(AEC.Type.STACK_MANIPULATION, 0x03, 0, argv -> {
         STACK_ENABLED = false;
     }),
 
-    CLEAR_STACK = AbstractEngineCommand.init(AbstractEngineCommand.Type.STACK_MANIPULATION, 0x04, 0, argv -> {
+    /// Clears the stack.
+    /// Syntax: \[03 04]
+    CLEAR_STACK = AEC.init(AEC.Type.STACK_MANIPULATION, 0x04, 0, argv -> {
         STACK.clear();
     }),
 
-    RNG = AbstractEngineCommand.init(AbstractEngineCommand.Type.STACK_MANIPULATION, 0x05, 0, argv -> {
+    /// Basic RNG. Only really good for debugging.
+    /// Syntax: \[03 05]
+    RNG = AEC.init(AEC.Type.STACK_MANIPULATION, 0x05, 0, argv -> {
         STACK.add((char) new Random().nextInt(Character.MIN_VALUE, Character.MAX_VALUE));
     }),
 
-    RNG_MULTIPLE = AbstractEngineCommand.init(AbstractEngineCommand.Type.STACK_MANIPULATION, 0x06, 1, argv -> {
-        for (int index = 0; index < CommandHelper.stackify(argv[0]); index++) {
+    /// Generate up to 65536 random numbers.
+    /// Still only good for debugging.
+    /// Syntax: \[03 05 XX XX] (S)
+    RNG_MULTIPLE = AEC.init(AEC.Type.STACK_MANIPULATION, 0x06, 2, argv -> {
+        for (int index = 0; index < CommandHelper.combine(argv); index++) {
             STACK.add((char) new Random().nextInt(Character.MIN_VALUE, Character.MAX_VALUE));
         }
     });

@@ -2,24 +2,27 @@ package xyz.lilyflower.conpri.text.command;
 
 import java.util.HashMap;
 
-public abstract class AbstractEngineCommand {
+/**
+ * Short for AbstractEngineCommand
+ */
+public abstract class AEC {
     public final int argc;
     public final Executor executor;
-    private static final HashMap<Type, HashMap<Character, AbstractEngineCommand>> REGISTRY = new HashMap<>();
+    private static final HashMap<Type, HashMap<Character, AEC>> REGISTRY = new HashMap<>();
 
-    private AbstractEngineCommand(Type type, int header, int argc, Executor executor) {
+    private AEC(Type type, int header, int argc, Executor executor) {
         this.argc = argc;
         this.executor = executor;
-        HashMap<Character, AbstractEngineCommand> commands = REGISTRY.get(type);
+        HashMap<Character, AEC> commands = REGISTRY.get(type);
         commands.put((char) header, this);
         REGISTRY.put(type, commands);
     }
 
-    public static AbstractEngineCommand init(Type type, int header, int argc, Executor executor) {
-        return new AbstractEngineCommand(type, header, argc, executor) {};
+    public static AEC init(Type type, int header, int argc, Executor executor) {
+        return new AEC(type, header, argc, executor) {};
     }
 
-    public static AbstractEngineCommand get(Type type, char lower) {
+    public static AEC get(Type type, char lower) {
         return REGISTRY.get(type).get(lower);
     }
 
