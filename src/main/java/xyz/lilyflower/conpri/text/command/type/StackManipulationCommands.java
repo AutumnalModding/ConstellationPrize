@@ -1,7 +1,8 @@
-package xyz.lilyflower.conpri.text.command;
+package xyz.lilyflower.conpri.text.command.type;
 
 import java.util.Random;
 import xyz.lilyflower.conpri.text.EngineState;
+import xyz.lilyflower.conpri.text.command.AEC;
 import xyz.lilyflower.conpri.text.util.CommandHelper;
 
 @SuppressWarnings("unused")

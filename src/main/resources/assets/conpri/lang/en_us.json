@@ -3,9 +3,16 @@
   "item.conpri.neural_interface": "Neural Interface Glasses",
   "trinkets.slot.conpri.niglasses": "Neural Interface Glasses",
 
+  "chat.conpri.accusation_dev": "You",
+  "chat.conpri.accusation_prod": "Someone",
+  "chat.conpri.fuckup_1": "⚠ WARNING: Critical failure encountered - %1$s fucked up.",
+  "chat.conpri.fuckup_2": "⚠ WARNING: Parsing failed at line %1$s, position %2$s for reason:",
+  "chat.conpri.fuckup_3": "⚠ WARNING: %1$s.",
+  "chat.conpri.fuckup_4": "⚠ WARNING: At location: %1$s.",
+
   "dialogue.conpri.debug_1": "[02 00 FF AA 00 20 01][02 00 FF AA 00 21 01][02 00 FF AA 00 22 01]This is some text... and it's now lang-translated!",
   "dialogue.conpri.debug_2": "And you can STILL have a max of six lines, too...",
   "dialogue.conpri.debug_3": "Also, pausing for frames still works with this.",
-  "dialogue.conpri.debug_4": "[03 06 0F][03 02][02 00 00 00 00 18 01][02 00 00 00 00 19 01][02 00 00 00 00 1A 01][02 00 00 00 00 1B 01][02 00 00 00 00 1C 01]test [01 01 14] line",
+  "dialogue.conpri.debug_4": "[03 06 00 0F][03 02][02 00 00 00 00 18 01][02 00 00 00 00 19 01][02 00 00 00 00 1A 01][02 00 00 00 00 1B 01][02 00 00 00 00 1C 01]test [01 01 14][06 00 01 03] line for VPC. ｈｅｌｌｏ",
   "dialogue.conpri.debug_5": "Did I mention there's a stack?[03 03][01 03]"
 }

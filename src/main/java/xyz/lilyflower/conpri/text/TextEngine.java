@@ -1,18 +1,30 @@
 package xyz.lilyflower.conpri.text;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.Text;
+import net.minecraft.text.TextCodecs;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.ColorHelper;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import xyz.lilyflower.conpri.client.display.module.DialogueModule;
+import xyz.lilyflower.conpri.init.ConstellationPrize;
 import xyz.lilyflower.conpri.init.ConstellationPrizeClient;
 import xyz.lilyflower.conpri.text.command.AEC;
+import xyz.lilyflower.conpri.text.command.VPC;
 
 import static xyz.lilyflower.conpri.text.EngineState.*;
 
 public class TextEngine {
+    private static final Logger LOGGER = LogManager.getLogger("Constellation Prize Text Engine");
 
     public static void load(Message message) {
         LINE_ARRAY = new StringBuilder[message.lines.length];
@@ -78,17 +90,37 @@ public class TextEngine {
 
                         try {
                             char next = LINE_CONTENT.get(LINE_INDEX)[LINE_POSITION];
+//                            System.out.println("Character Value: " + (int) next);
 
                             if (next == 0x00) {
                                 char upper = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
+//                                System.out.println("Upper Value: " + (int) upper);
                                 char lower = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
+//                                System.out.println("Lower Value: " + (int) lower);
                                 AEC.Type[] types = AEC.Type.values();
-
                                 AEC command = AEC.get(types[Math.clamp(upper - 1, 0, types.length)], lower);
-                                char[] arguments = new char[command.argc];
+
+                                int argc = switch (command) {
+                                    case VPC variable -> {
+                                        int absolute = Math.abs(variable.argc);
+                                        System.out.println("Reading ahead " + absolute + " times");
+                                        char[] readahead = new char[absolute];
+                                        for (int param = 0; param <= absolute; param++) {
+                                            System.out.println("Readahead");
+                                            readahead[param] = LINE_CONTENT.get(LINE_INDEX)[LINE_POSITION + (param + 1)];
+                                        }
+                                        yield variable.argn.applyAsInt(readahead) + absolute;
+                                    }
+
+                                    case AEC ignored -> command.argc;
+                                };
+
+                                char[] arguments = new char[argc];
                                 for (int arg = 0; arg < arguments.length; arg++) {
                                     arguments[arg] = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
+//                                    System.out.println("Argument Value: " + (int) arguments[arg]);
                                 }
+
                                 command.executor.run(arguments);
                             } else {
                                 LINE_ARRAY[LINE_INDEX].append(next);
@@ -98,7 +130,8 @@ public class TextEngine {
                             }
 
                             LINE_POSITION++;
-                        } catch (IndexOutOfBoundsException ignored) {
+                        } catch (IndexOutOfBoundsException exception) {
+                            whoSetUsUpTheBomb(exception);
                             LINE_INDEX = 0;
                             LINE_CONTENT.clear();
                             CHARACTER_COLOURS.clear();
@@ -152,13 +185,24 @@ public class TextEngine {
         }
     }
 
+    private static void whoSetUsUpTheBomb(Exception exception) {
+        String accusation = FabricLoader.getInstance().isDevelopmentEnvironment() ? I18n.translate("chat.conpri.accusation_dev") : I18n.translate("chat.conpri.accusation_prod");
+        ClientPlayerEntity player = ConstellationPrizeClient.CLIENT_INSTANCE.player;
+        player.sendMessage(Text.translatable("chat.conpri.fuckup_1", accusation).formatted(Formatting.RED), false);
+        player.sendMessage(Text.translatable("chat.conpri.fuckup_2", LINE_INDEX, LINE_POSITION).formatted(Formatting.RED), false);
+        StackTraceElement element = exception.getStackTrace()[0];
+        player.sendMessage(Text.translatable("chat.conpri.fuckup_3", exception.getMessage()).formatted(Formatting.RED), false);
+        player.sendMessage(Text.translatable("chat.conpri.fuckup_4", element.getFileName() + ", line " + element.getLineNumber()).formatted(Formatting.RED), false);
+        player.sendMessage(Text.literal(""), false);
+    }
+
     @SuppressWarnings("unused")
     public static class LineSpeed {
         public static final float FAST = 0.75f;
         public static final float MEDIUM = 1.25f;
-        public static final int SLOW = 2;
-        public static final int SNAIL = 6;
-        public static final int VISCOUS = 8;
+        public static final float SLOW = 1.75f;
+        public static final float SNAIL = 2.5f;
+        public static final float VISCOUS = 3.25f;
     }
 
     public enum Status {
@@ -171,3 +215,4 @@ public class TextEngine {
 
     public record Message(String portrait, SoundEvent voiceline, SoundEvent talksound, String... lines) {}
 }
+

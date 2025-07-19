@@ -1,16 +1,21 @@
 package xyz.lilyflower.conpri.text.command;
 
 import java.util.HashMap;
+import xyz.lilyflower.conpri.text.command.type.EventFlagCommands;
+import xyz.lilyflower.conpri.text.command.type.SpecialCommands;
+import xyz.lilyflower.conpri.text.command.type.StackManipulationCommands;
+import xyz.lilyflower.conpri.text.command.type.StateCommands;
+import xyz.lilyflower.conpri.text.command.type.VisualCommands;
 
 /**
- * Short for AbstractEngineCommand
+ * Abstract Engine Command
  */
 public abstract class AEC {
     public final int argc;
     public final Executor executor;
     private static final HashMap<Type, HashMap<Character, AEC>> REGISTRY = new HashMap<>();
 
-    private AEC(Type type, int header, int argc, Executor executor) {
+    AEC(Type type, int header, int argc, Executor executor) {
         this.argc = argc;
         this.executor = executor;
         HashMap<Character, AEC> commands = REGISTRY.get(type);
@@ -23,7 +28,9 @@ public abstract class AEC {
     }
 
     public static AEC get(Type type, char lower) {
-        return REGISTRY.get(type).get(lower);
+        AEC command = REGISTRY.get(type).get(lower);
+//        System.out.println(command instanceof VPC);
+        return command;
     }
 
     @FunctionalInterface
@@ -36,7 +43,8 @@ public abstract class AEC {
         VISUAL,
         STACK_MANIPULATION,
         EVENT_FLAG,
-        CONDITIONAL
+        CONDITIONAL,
+        SPECIAL
     }
 
     static {
@@ -48,5 +56,7 @@ public abstract class AEC {
         new VisualCommands();
         new StackManipulationCommands();
         new EventFlagCommands();
+
+        new SpecialCommands();
     }
 }

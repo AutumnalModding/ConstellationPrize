@@ -12,7 +12,7 @@ public class CommandHelper extends EngineState {
             lower = stackify(input[1]);
         }
 
-        return (char) Integer.parseInt(Int eger.toHexString(upper) + Integer.toHexString(lower), 16);
+        return (char) Integer.parseInt(Integer.toHexString(upper) + Integer.toHexString(lower), 16);
     }
 
     public static char stackify(char input) {
