@@ -7,6 +7,11 @@
     "authors": [
         "Fractalflower"
     ],
+    "contributors": [
+        {
+            "name": "Laxystem"
+        }
+    ],
     "license": "GPLv3",
     "icon": "assets/conpri/icon.png",
     "environment": "*",

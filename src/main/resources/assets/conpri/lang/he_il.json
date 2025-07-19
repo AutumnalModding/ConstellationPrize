@@ -1,0 +1,12 @@
+{
+  "stat.conpri.stars_exploded": "כוכבים שהופצצו למטרות רווח",
+  "item.conpri.neural_interface": "משקפי ממשק עצבי",
+  "trinkets.slot.conpri.niglasses": "משקפי ממשק עצבי",
+
+  "chat.conpri.accusation_dev": "",
+  "chat.conpri.accusation_prod": "לא ",
+  "chat.conpri.fuckup_1": "⚠ אזהרה: המערכת נכשלה קריטית - זו %1$sאשמתך.",
+  "chat.conpri.fuckup_2": "⚠ אזהרה: הניתוח הדקדוקי נכשל בשורה %1$s, עמודה %2$s כי:",
+  "chat.conpri.fuckup_3": "⚠ אזהרה: %1$s.",
+  "chat.conpri.fuckup_4": "⚠ אזהרה: ב: %1$s."
+}
