@@ -8,11 +8,13 @@ import net.minecraft.util.math.ColorHelper;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import xyz.lilyflower.conpri.client.display.module.DialogueModule;
 import xyz.lilyflower.conpri.init.ConstellationPrizeClient;
+import xyz.lilyflower.conpri.text.command.AbstractEngineCommand;
+
 import static xyz.lilyflower.conpri.text.EngineState.*;
 
 public class TextEngine {
 
-    public static void init(Message message) {
+    public static void load(Message message) {
         LINE_ARRAY = new StringBuilder[message.lines.length];
         LINE_COUNT = message.lines.length;
 
@@ -78,20 +80,15 @@ public class TextEngine {
                             char next = LINE_CONTENT.get(LINE_INDEX)[LINE_POSITION];
 
                             if (next == 0x00) {
-                                char header_lower = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
-                                char header_upper = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
+                                char upper = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
+                                char lower = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
 
-                                for (EngineCommand command : EngineCommand.values()) {
-                                    if (command.header[0] == header_lower && command.header[1] == header_upper) {
-                                        char[] arguments = new char[command.argc];
-                                        for (int arg = 0; arg < arguments.length; arg++) {
-                                            arguments[arg] = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
-                                        }
-                                        command.executor.run(arguments);
-
-                                        break;
-                                    }
+                                AbstractEngineCommand command = AbstractEngineCommand.get(AbstractEngineCommand.Type.values()[upper-1], lower);
+                                char[] arguments = new char[command.argc];
+                                for (int arg = 0; arg < arguments.length; arg++) {
+                                    arguments[arg] = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
                                 }
+                                command.executor.run(arguments);
                             } else {
                                 LINE_ARRAY[LINE_INDEX].append(next);
                                 if (CURRENT_MESSAGE.talksound != null) {
@@ -163,7 +160,7 @@ public class TextEngine {
         public static final int VISCOUS = 8;
     }
 
-    enum Status {
+    public enum Status {
         PAUSED,
         HALTED,
         WAITING,

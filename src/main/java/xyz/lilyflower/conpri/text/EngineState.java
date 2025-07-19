@@ -5,28 +5,28 @@ import java.util.HashMap;
 import net.minecraft.client.font.TextRenderer;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
-public class EngineState {
-    static TextEngine.Message CURRENT_MESSAGE;
-    static int PAUSE_DURATION_ELAPSED = 0;
-    static int PAUSE_DURATION_MAX = 0;
-    static float PAUSE_DELTA = 0;
-    static TextEngine.Status STATUS = TextEngine.Status.INACTIVE;
-    static int BLINK_DELTA_CHARACTER = 0;
-    static int BLINK_DELTA_DISPLAY = 0;
-    static int DRAW_POSITION_Y = 0;
-    static int DRAW_POSITION_X = 0;
-    static HashMap<ImmutablePair<Integer, Integer>, Integer> CHARACTER_COLOURS = new HashMap<>();
-    static ArrayList<char[]> LINE_CONTENT = new ArrayList<>();
-    static StringBuilder[] LINE_ARRAY;
-    static float LINE_DELTA = 0;
-    static float LINE_SPEED = TextEngine.LineSpeed.FAST;
-    static int LINE_INDEX = 0;
-    static int LINE_POSITION = 0;
-    static int LINE_COUNT = 0;
-    static TextRenderer VANILLA_RENDERER;
-    static HashMap<Character, Character> MEMORY;
-    static ArrayList<Character> STACK = new ArrayList<>();
-    static boolean STACK_ENABLED = false;
+public abstract class EngineState {
+    protected static TextEngine.Message CURRENT_MESSAGE;
+    protected static int PAUSE_DURATION_ELAPSED = 0;
+    protected static int PAUSE_DURATION_MAX = 0;
+    protected static float PAUSE_DELTA = 0;
+    protected static TextEngine.Status STATUS = TextEngine.Status.INACTIVE;
+    protected static int BLINK_DELTA_CHARACTER = 0;
+    protected static int BLINK_DELTA_DISPLAY = 0;
+    protected static int DRAW_POSITION_Y = 0;
+    protected static int DRAW_POSITION_X = 0;
+    protected static HashMap<ImmutablePair<Integer, Integer>, Integer> CHARACTER_COLOURS = new HashMap<>();
+    protected static ArrayList<char[]> LINE_CONTENT = new ArrayList<>();
+    protected static StringBuilder[] LINE_ARRAY;
+    protected static float LINE_DELTA = 0;
+    protected static float LINE_SPEED = TextEngine.LineSpeed.FAST;
+    protected static int LINE_INDEX = 0;
+    protected static int LINE_POSITION = 0;
+    protected static int LINE_COUNT = 0;
+    protected static TextRenderer VANILLA_RENDERER;
+    protected static HashMap<Character, Character> MEMORY;
+    protected static ArrayList<Character> STACK = new ArrayList<>();
+    protected static boolean STACK_ENABLED = false;
 
     public static void setPosition(int x, int y) {
         DRAW_POSITION_X = x;
@@ -48,7 +48,7 @@ public class EngineState {
         }
     }
 
-    public static void init(TextRenderer renderer) {
+    public static void setRenderer(TextRenderer renderer) {
         VANILLA_RENDERER = renderer;
     }
 }

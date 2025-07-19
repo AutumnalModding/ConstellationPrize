@@ -17,7 +17,7 @@ public class RendererInitializer {
             DisplayManager.Constants.GAME_WINDOW = ConstellationPrizeClient.CLIENT_INSTANCE.getWindow();
             DisplayManager.Constants.HUD_INSTANCE = ConstellationPrizeClient.CLIENT_INSTANCE.inGameHud;
 
-            EngineState.init(ConstellationPrizeClient.CLIENT_INSTANCE.textRenderer);
+            EngineState.setRenderer(ConstellationPrizeClient.CLIENT_INSTANCE.textRenderer);
         }
     }
 }

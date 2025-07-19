@@ -49,7 +49,7 @@ public class DialogueModule implements GenericModule {
             init("dialogue.conpri.debug_4", "dialogue.conpri.debug_5");
             EngineState.setPosition(MagicNumbers.PORTRAIT_X + MagicNumbers.PORTRAIT_SIZE + 6, MagicNumbers.PORTRAIT_Y + 1);
 
-            TextEngine.init(new TextEngine.Message(
+            TextEngine.load(new TextEngine.Message(
                     "textures/gui/portrait/pancakes.png",
                     null,
                     null,
