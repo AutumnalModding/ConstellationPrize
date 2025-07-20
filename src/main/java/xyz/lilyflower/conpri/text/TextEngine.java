@@ -94,8 +94,8 @@ public class TextEngine {
 
                             if (next == 0x00) {
                                 char upper = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
-//                                System.out.println("Upper Value: " + (int) upper);
                                 char lower = LINE_CONTENT.get(LINE_INDEX)[++LINE_POSITION];
+//                                System.out.println("Upper Value: " + (int) upper);
 //                                System.out.println("Lower Value: " + (int) lower);
                                 AEC.Type[] types = AEC.Type.values();
                                 AEC command = AEC.get(types[Math.clamp(upper - 1, 0, types.length)], lower);
@@ -103,10 +103,8 @@ public class TextEngine {
                                 int argc = switch (command) {
                                     case VPC variable -> {
                                         int absolute = Math.abs(variable.argc);
-                                        System.out.println("Reading ahead " + absolute + " times");
                                         char[] readahead = new char[absolute];
                                         for (int param = 0; param <= absolute; param++) {
-                                            System.out.println("Readahead");
                                             readahead[param] = LINE_CONTENT.get(LINE_INDEX)[LINE_POSITION + (param + 1)];
                                         }
                                         yield variable.argn.applyAsInt(readahead) + absolute;
@@ -131,6 +129,7 @@ public class TextEngine {
 
                             LINE_POSITION++;
                         } catch (IndexOutOfBoundsException exception) {
+                            exception.printStackTrace();
                             whoSetUsUpTheBomb(exception);
                             LINE_INDEX = 0;
                             LINE_CONTENT.clear();
@@ -186,13 +185,18 @@ public class TextEngine {
     }
 
     private static void whoSetUsUpTheBomb(Exception exception) {
-        String accusation = FabricLoader.getInstance().isDevelopmentEnvironment() ? I18n.translate("chat.conpri.accusation_dev") : I18n.translate("chat.conpri.accusation_prod");
         ClientPlayerEntity player = ConstellationPrizeClient.CLIENT_INSTANCE.player;
+        System.out.println(exception.getClass().getSimpleName());
+        String accusation = FabricLoader.getInstance().isDevelopmentEnvironment() ? I18n.translate("chat.conpri.accusation_dev") : I18n.translate("chat.conpri.accusation_prod");
         player.sendMessage(Text.translatable("chat.conpri.fuckup_1", accusation).formatted(Formatting.RED), false);
         player.sendMessage(Text.translatable("chat.conpri.fuckup_2", LINE_INDEX, LINE_POSITION).formatted(Formatting.RED), false);
-        StackTraceElement element = exception.getStackTrace()[0];
         player.sendMessage(Text.translatable("chat.conpri.fuckup_3", exception.getMessage()).formatted(Formatting.RED), false);
-        player.sendMessage(Text.translatable("chat.conpri.fuckup_4", element.getFileName() + ", line " + element.getLineNumber()).formatted(Formatting.RED), false);
+        String where = "[NO DATA]";
+        try {
+            StackTraceElement element = exception.getStackTrace()[0];
+            where = element.getFileName() + ":" + element.getLineNumber();
+        } catch (ArrayIndexOutOfBoundsException ignored) {};
+        player.sendMessage(Text.translatable("chat.conpri.fuckup_4", where).formatted(Formatting.RED), false);
         player.sendMessage(Text.literal(""), false);
     }
 

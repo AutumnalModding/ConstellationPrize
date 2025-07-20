@@ -1,0 +1,8 @@
+{
+  "chat.conpri.accusation_dev": "Du hast Scheiße gebaut.",
+  "chat.conpri.accusation_prod": "Jemand ist am Arsch.",
+  "chat.conpri.fuckup_1": "⚠ ACHTUNG: Kritischer Fehler entdeckt - %1$s",
+  "chat.conpri.fuckup_2": "⚠ ACHTUNG: Syntaxanalyse fehlgeschlagen in Zeile %1$s, Stelle %2$s auf Grund von:",
+  "chat.conpri.fuckup_3": "⚠ ACHTUNG: %1$s.",
+  "chat.conpri.fuckup_4": "⚠ ACHTUNG: An Ort: %1$s."
+}

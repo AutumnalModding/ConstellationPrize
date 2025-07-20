@@ -8,9 +8,10 @@
         "Fractalflower"
     ],
     "contributors": [
-        {
-            "name": "Laxystem"
-        }
+        "Laxystem // Hebrew translation",
+        "Midori // French translation",
+        "G_cat // Russian translation",
+        "SoupierOx // German translation"
     ],
     "license": "GPLv3",
     "icon": "assets/conpri/icon.png",
