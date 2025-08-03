@@ -1,0 +1,8 @@
+{
+    "chat.epsilon.accusation_dev": "Tu",
+    "chat.epsilon.accusation_prod": "Quelqu'un",
+    "chat.epsilon.fuckup_1": "⚠ AVERTISSEMENT : Échec critique rencontré - %1$s as merdé.",
+    "chat.epsilon.fuckup_2": "⚠ AVERTISSEMENT : Échec d’analyse à la ligne %1$s, position %2$s pour la raison :",
+    "chat.epsilon.fuckup_3": "⚠ AVERTISSEMENT : %1$s.",
+    "chat.epsilon.fuckup_4": "⚠ AVERTISSEMENT : À l’emplacement : %1$s."
+}

@@ -1,0 +1,23 @@
+{
+  "stat.epsilon.stars_exploded": "Stars Blown Up for Profit",
+  "item.epsilon.neural_interface": "Neural Interface Glasses",
+  "trinkets.slot.epsilon.niglasses": "Neural Interface Glasses",
+
+  "chat.epsilon.accusation_dev": "You",
+  "chat.epsilon.accusation_prod": "Someone",
+  "chat.epsilon.fuckup_1": "⚠ WARNING: Critical failure encountered - %1$s fucked up.",
+  "chat.epsilon.fuckup_2": "⚠ WARNING: Parsing failed at line %1$s, position %2$s for reason:",
+  "chat.epsilon.fuckup_3": "⚠ WARNING: %1$s.",
+  "chat.epsilon.fuckup_4": "⚠ WARNING: At location: %1$s.",
+
+  "dialogue.epsilon.debug_1": "[02 00 FF AA 00 20 01][02 00 FF AA 00 21 01][02 00 FF AA 00 22 01]This is some text... and it's now lang-translated!",
+  "dialogue.epsilon.debug_2": "And you can STILL have a max of six lines, too...",
+  "dialogue.epsilon.debug_3": "Also, pausing for frames still works with this.",
+  "dialogue.epsilon.debug_4": "Test line for pausing. [06 00 01 01 20]",
+  "dialogue.epsilon.debug_5": "Did I mention there's a stack?[01 01 32] [07 00 00 01]",
+
+  "dialogue.epsilon.multidebug_1": "And now you can have multiple text blocks.",
+  "dialogue.epsilon.multidebug_2": "Switch between [01 00]them on the fly.[01 00][07 00 00 02]",
+
+  "dialogue.epsilon.test_1": "This should not work.[01 03]"
+}

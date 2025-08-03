@@ -1,0 +1,11 @@
+{
+    "required": true,
+    "package": "xyz.lilyflower.epsilon.client.mixin",
+    "compatibilityLevel": "JAVA_21",
+    "client": [
+      "RendererInitializer"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

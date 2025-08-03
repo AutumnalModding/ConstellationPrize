@@ -1,8 +1,8 @@
 {
     "schemaVersion": 1,
-    "id": "conpri",
+    "id": "epsilon",
     "version": "${version}",
-    "name": "Constellation Prize",
+    "name": "EPSILON",
     "description": "? ? ?",
     "authors": [
         "Fractalflower"
@@ -14,27 +14,27 @@
         "SoupierOx // German translation"
     ],
     "license": "GPLv3",
-    "icon": "assets/conpri/icon.png",
+    "icon": "assets/epsilon/icon.png",
     "environment": "*",
     "entrypoints": {
         "main": [
-            "xyz.lilyflower.conpri.init.ConstellationPrize"
+            "xyz.lilyflower.epsilon.init.EPSILON"
         ],
 
         "client": [
-            "xyz.lilyflower.conpri.init.ConstellationPrizeClient"
+            "xyz.lilyflower.epsilon.init.EPSILONClient"
         ],
 
         "fabric-datagen": [
-            "xyz.lilyflower.conpri.init.ConstellationPrizeDataGenerator"
+            "xyz.lilyflower.epsilon.init.EPSILONDatagen"
         ],
 
         "cardinal-components": [
-            "xyz.lilyflower.conpri.init.ConstellationPrizeComponents"
+            "xyz.lilyflower.epsilon.init.EPSILONComponents"
         ]
     },
     "mixins": [
-        "conpri.client.mixins.json"
+      "epsilon.client.mixins.json"
     ],
     "depends": {
         "fabricloader": ">=0.16.14",
@@ -44,7 +44,7 @@
     },
     "custom": {
         "cardinal-components": [
-            "conpri:flags"
+            "epsilon:flags"
         ]
     }
 }

@@ -1,8 +1,0 @@
-{
-  "chat.conpri.accusation_dev": "Ты",
-  "chat.conpri.accusation_prod": "Кто-то",
-  "chat.conpri.fuckup_1": "⚠ ВНИМАНИЕ: Возникла критическая ошибка - %1$s всё захуярил.",
-  "chat.conpri.fuckup_2": "⚠ ВНИМАНИЕ: Парсинг не смог прочитать строку номер %1$s, позицию %2$s, предоставив следующую причину:",
-  "chat.conpri.fuckup_3": "⚠ ВНИМАНИЕ: %1$s.",
-  "chat.conpri.fuckup_4": "⚠ ВНИМАНИЕ: Ошибка вызвана: %1$s."
-}
